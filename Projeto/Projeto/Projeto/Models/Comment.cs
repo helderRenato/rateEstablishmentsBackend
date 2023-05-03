@@ -1,22 +1,30 @@
-﻿namespace Projeto.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace dxz.Models
 {
-    public class Comentario
+    public class Comment
     {
-
-
-        public Comentario()
-        {
-            ListaAvaliacaoComentario = new HashSet<AvaliacaoComentario>();
-        }
 
         public int Id { get; set; }
 
-        public Boolean Denunciado { get; set; }
+        public string Text { get; set; }
 
-        public string Texto { get; set;}
+        public Boolean Denounced {get; set;}
 
-        public Boolean isAnswer { get; set;}
+        public Boolean IsAnswer { get; set; }
 
-        public ICollection<AvaliacaoComentario> ListaAvaliacaoComentario { get; set; }
+        [ForeignKey(nameof(Establishment))]
+        public int EstablishmentFK { get; set; }
+
+        [ForeignKey(nameof(User))]
+        public int UserFK { get; set; }
+
+
+        public ICollection<CommentRate> ListCommentRate { get; set; }
+
+        public Comment()
+        {
+            ListCommentRate = new List<CommentRate>();
+        }
     }
 }

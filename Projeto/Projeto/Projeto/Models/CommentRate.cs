@@ -1,16 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Configuration;
 
-namespace Projeto.Models
+namespace dxz.Models
 {
     public class CommentRate
     {
-        public string Id { get; set; }
+
+        public int id {  get; set; }
 
         public int Likes { get; set; }
 
-
-        [ForeignKey(nameof(Comentario))]
+        [ForeignKey(nameof(Comment))]
         public int CommentFK { get; set; }
     }
 }

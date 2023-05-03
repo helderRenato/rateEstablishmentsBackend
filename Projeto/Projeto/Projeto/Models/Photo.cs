@@ -2,16 +2,20 @@
 
 namespace dxz.Models
 {
-    public class EstablishmentRate
+    public class Photo
     {
+
         public int Id { get; set; }
 
-        public int Stars { get; set; }
+        public string Name { get; set; }
 
-        [ForeignKey(nameof(User))]
-        public int UserFK { get; set; }
+        public string Path { get; set; }
+
+        public string File { get; set; }
+
 
         [ForeignKey(nameof(Establishment))]
         public int EstablishmentFK { get; set; }
+
     }
 }

@@ -5,6 +5,7 @@ namespace dxz.Models
     public class Comment
     {
 
+        [key]
         public int Id { get; set; }
 
         public string Text { get; set; }
@@ -15,9 +16,6 @@ namespace dxz.Models
 
         [ForeignKey(nameof(Establishment))]
         public int EstablishmentFK { get; set; }
-
-        [ForeignKey(nameof(User))]
-        public int UserFK { get; set; }
 
 
         public ICollection<CommentRate> ListCommentRate { get; set; }

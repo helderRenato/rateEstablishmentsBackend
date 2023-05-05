@@ -5,6 +5,7 @@ namespace dxz.Models
     public class User
     {
 
+        [key]
         public int Id { get; set; }
 
         public string Name { get; set; }
@@ -13,11 +14,7 @@ namespace dxz.Models
 
         public string Password { get; set; }
 
-        [ForeignKey(nameof(User))]
-        public int UserFK { get; set; }
-
-
-        public ICollection<Comment> ListComment { get; set; }
+        
 
         public ICollection<EstablishmentRate> ListEstablishmentRate { get; set; }
 
@@ -26,7 +23,7 @@ namespace dxz.Models
 
         public User()
         {
-            ListComment = new List<Comment>();
+
             ListEstablishmentRate = new List<EstablishmentRate>();
             ListCommentRate = new List<CommentRate>();
         }

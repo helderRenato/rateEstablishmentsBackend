@@ -4,6 +4,8 @@ namespace dxz.Models
 {
     public class Establishment
     {
+
+        [key]
         public int id { get; set; }
 
         public string name { get; set; }

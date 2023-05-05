@@ -20,7 +20,11 @@ public class ApplicationDBContext : IdentityDbContext<IdentityUser>
     }
 
     // define table on the database
-    public DbSet<Establishment> Establishments { get; set; }
+    public DbSet<Establishment> Establishment { get; set; }
+    public DbSet<EstablishmentRate> EstablishmentsRate { get; set; }
+    public DbSet<Comment> Comment { get; set; }
+    public DbSet<CommentRate> CommentRate { get; set; }
+    public DbSet<Photo> Photo { get; set; }
     public DbSet<User> Users { get; set; }
 
 }

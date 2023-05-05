@@ -90,9 +90,9 @@ namespace Projeto.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
 
-                await _userStore.SetUserNameAsync(user, Input.Establishment.Email, CancellationToken.None);
-                await _emailStore.SetEmailAsync(user, Input.Establishment.Email, CancellationToken.None);
-                var result = await _userManager.CreateAsync(user, Input.Establishment.Password);
+                await _userStore.SetUserNameAsync(user, Input.Establishment.User.Email, CancellationToken.None);
+                await _emailStore.SetEmailAsync(user, Input.Establishment.User.Email, CancellationToken.None);
+                var result = await _userManager.CreateAsync(user, Input.Establishment.User.Password);
 
                 if (result.Succeeded)
                 {
@@ -107,12 +107,12 @@ namespace Projeto.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Establishment.Email, "Confirm your email",
+                    await _emailSender.SendEmailAsync(Input.Establishment.User.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Establishment.Email, returnUrl = returnUrl });
+                        return RedirectToPage("RegisterConfirmation", new { email = Input.Establishment.User.Email, returnUrl = returnUrl });
                     }
                     else
                     {

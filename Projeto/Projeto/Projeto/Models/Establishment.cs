@@ -1,22 +1,21 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace dxz.Models
+namespace Projeto.Models
 {
     public class Establishment
     {
 
-        [key]
-        public int id { get; set; }
+        [Key]
+        public int Id { get; set; }
 
-        public string name { get; set; }
+        public string Name { get; set; }
 
         public string City { get; set; }
 
         public string Address { get; set; }
 
-        public string Mail { get; set; }
-
-        public string phone { get; set; }
+        public string Phone { get; set; }
 
         public establishmentType TypeEstablishment { get; set; }
 
@@ -27,9 +26,9 @@ namespace dxz.Models
             Hotel
         }
 
-        [ForeignKey(nameof(User))]
+        [ForeignKey(nameof(UserFK))]
+        public User User { get; set; }
         public int UserFK { get; set; }
-
 
         public ICollection<Comment> ListComment { get; set; }
 

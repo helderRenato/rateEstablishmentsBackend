@@ -1,11 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace dxz.Models
+namespace Projeto.Models
 {
     public class Comment
     {
 
-        [key]
+        [Key]
         public int Id { get; set; }
 
         public string Text { get; set; }
@@ -14,7 +15,8 @@ namespace dxz.Models
 
         public Boolean IsAnswer { get; set; }
 
-        [ForeignKey(nameof(Establishment))]
+        [ForeignKey(nameof(EstablishmentFK))]
+        public Establishment Establishment { get; set; }
         public int EstablishmentFK { get; set; }
 
 

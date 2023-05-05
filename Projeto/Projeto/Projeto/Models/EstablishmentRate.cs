@@ -1,19 +1,22 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace dxz.Models
+namespace Projeto.Models
 {
     public class EstablishmentRate
     {
 
-        [key]
+        [Key]
         public int Id { get; set; }
 
         public int Stars { get; set; }
 
-        [ForeignKey(nameof(User))]
+        [ForeignKey(nameof(UserFK))]
         public int UserFK { get; set; }
+        public User User { get; set; }
 
-        [ForeignKey(nameof(Establishment))]
+        [ForeignKey(nameof(EstablishmentFK))]
+        public Establishment Establishment { get; set; }
         public int EstablishmentFK { get; set; }
     }
 }

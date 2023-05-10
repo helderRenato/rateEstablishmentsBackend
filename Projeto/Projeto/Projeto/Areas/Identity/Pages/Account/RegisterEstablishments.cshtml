@@ -1,5 +1,6 @@
 ﻿@page
 @model RegisterEstablishmentsModel
+@using Projeto.Models
 @{
     ViewData["Title"] = "Register";
 }
@@ -8,7 +9,7 @@
 
 <div class="row">
     <div class="col-md-4">
-        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" enctype="multipart/form-data">
             <h2>Create a new account.</h2>
             <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -52,6 +53,23 @@
                 <input asp-for="Input.Establishment.Phone" class="form-control" autocomplete="username" aria-required="true" />
                 <label asp-for="Input.Establishment.Phone"></label>
                 <span asp-validation-for="Input.Establishment.Phone" class="text-danger"></span>
+            </div>
+
+            @*Tipo de Estabelecimento*@
+            <div class="form-group">
+                <label asp-for="Input.Establishment.TypeEstablishment" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <select asp-for="Input.Establishment.TypeEstablishment" asp-items="Html.GetEnumSelectList<Establishment.establishmentType>()">
+                        <option selected="selected" value="">Please select</option>
+                    </select>
+                    <span asp-validation-for="Input.Establishment.TypeEstablishment" class="text-danger" />
+                </div>
+            </div>
+            
+             @*Input de Fotografias*@
+            <div class="form-group">
+              <label asp-for="Input.Photo.Name" class="col-md-2 control-label"></label>
+              <input class="form-control" type="file" id="formFile" accept=".jpg,.png" name = "fotoUser" asp-for = "Input.Photo.Name" aria-required = "true">
             </div>
 
             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>

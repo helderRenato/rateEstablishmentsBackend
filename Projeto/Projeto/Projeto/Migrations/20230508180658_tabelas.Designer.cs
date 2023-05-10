@@ -12,7 +12,7 @@ using Projeto.Areas.Identity.Data;
 namespace Projeto.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20230505161303_tabelas")]
+    [Migration("20230508180658_tabelas")]
     partial class tabelas
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -313,7 +313,7 @@ namespace Projeto.Migrations
                     b.Property<int>("TypeEstablishment")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserFK")
+                    b.Property<int?>("UserFK")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -495,9 +495,7 @@ namespace Projeto.Migrations
                 {
                     b.HasOne("Projeto.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserFK")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserFK");
 
                     b.Navigation("User");
                 });

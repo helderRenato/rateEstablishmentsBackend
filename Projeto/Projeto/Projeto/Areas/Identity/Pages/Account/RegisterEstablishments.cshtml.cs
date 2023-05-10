@@ -30,13 +30,14 @@ namespace Projeto.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-
+        private readonly IWebHostEnvironment _webHostEnvironment;
         public RegisterEstablishmentsModel(
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender, 
+            IWebHostEnvironment webHostEnvironment)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -44,6 +45,7 @@ namespace Projeto.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         /// <summary>
@@ -73,6 +75,7 @@ namespace Projeto.Areas.Identity.Pages.Account
         {
             //Dados do estabelecimento
             public Establishment Establishment { get; set; }
+            public Photo Photo { get; set; }
         }
 
 
@@ -82,7 +85,7 @@ namespace Projeto.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(IFormFile fotoUser, string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -94,8 +97,53 @@ namespace Projeto.Areas.Identity.Pages.Account
                 await _emailStore.SetEmailAsync(user, Input.Establishment.User.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Establishment.User.Password);
 
+
+
+
+                if (!(fotoUser.ContentType == "image/jpeg" || fotoUser.ContentType == "image/png"))
+                {
+                    // write the error message
+                    ModelState.AddModelError("", "Please, if you want to send a file, please choose an image...");
+                    // resend control to view, with data provided by user
+                    return Page();
+                }
+                else
+                {
+                    // define image name
+                    Guid g;
+                    g = Guid.NewGuid();
+                    string imageName = Input.Photo.Name + "_" + g.ToString();
+                    string extensionOfImage = Path.GetExtension(fotoUser.FileName).ToLower();
+                    imageName += extensionOfImage;
+                    // add image name to vet data
+                    Input.Photo.File = imageName;
+                }
+
+
+
                 if (result.Succeeded)
                 {
+
+                    //---------------------------------------------------------------------------------------
+                    // save image file to disk
+                    // ********************************
+                    if (fotoUser != null)
+                    {
+                        // ask the server what address it wants to use
+                        string addressToStoreFile = _webHostEnvironment.WebRootPath;
+                        string newImageLocalization = Path.Combine(addressToStoreFile, "Photos//User");
+                        // see if the folder 'Photos' exists
+                        if (!Directory.Exists(newImageLocalization))
+                        {
+                            Directory.CreateDirectory(newImageLocalization);
+                        }
+                        // save image file to disk
+                        newImageLocalization = Path.Combine(newImageLocalization, Input.Photo.File);
+                        using var stream = new FileStream(newImageLocalization, FileMode.Create);
+                        await fotoUser.CopyToAsync(stream);
+                    }
+
+
                     _logger.LogInformation("User created a new account with password.");
 
                     var userId = await _userManager.GetUserIdAsync(user);

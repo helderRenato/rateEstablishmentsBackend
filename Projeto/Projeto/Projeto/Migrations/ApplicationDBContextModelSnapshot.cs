@@ -249,7 +249,7 @@ namespace Projeto.Migrations
 
                     b.HasIndex("EstablishmentFK");
 
-                    b.ToTable("Comment");
+                    b.ToTable("Comment", (string)null);
                 });
 
             modelBuilder.Entity("Projeto.Models.CommentRate", b =>
@@ -281,7 +281,7 @@ namespace Projeto.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("CommentRate");
+                    b.ToTable("CommentRate", (string)null);
                 });
 
             modelBuilder.Entity("Projeto.Models.Establishment", b =>
@@ -311,14 +311,14 @@ namespace Projeto.Migrations
                     b.Property<int>("TypeEstablishment")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserFK")
+                    b.Property<int?>("UserFK")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserFK");
 
-                    b.ToTable("Establishment");
+                    b.ToTable("Establishment", (string)null);
                 });
 
             modelBuilder.Entity("Projeto.Models.EstablishmentRate", b =>
@@ -347,7 +347,7 @@ namespace Projeto.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("EstablishmentsRate");
+                    b.ToTable("EstablishmentsRate", (string)null);
                 });
 
             modelBuilder.Entity("Projeto.Models.Photo", b =>
@@ -380,7 +380,7 @@ namespace Projeto.Migrations
 
                     b.HasIndex("EstablishmentId");
 
-                    b.ToTable("Photo");
+                    b.ToTable("Photo", (string)null);
                 });
 
             modelBuilder.Entity("Projeto.Models.User", b =>
@@ -405,7 +405,7 @@ namespace Projeto.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -493,9 +493,7 @@ namespace Projeto.Migrations
                 {
                     b.HasOne("Projeto.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserFK")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserFK");
 
                     b.Navigation("User");
                 });

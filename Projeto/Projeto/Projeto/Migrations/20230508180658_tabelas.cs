@@ -36,14 +36,13 @@ namespace Projeto.Migrations
             migrationBuilder.RenameColumn(
                 name: "EstablishmentType",
                 table: "Establishment",
-                newName: "UserFK");
+                newName: "TypeEstablishment");
 
             migrationBuilder.AddColumn<int>(
-                name: "TypeEstablishment",
+                name: "UserFK",
                 table: "Establishment",
                 type: "int",
-                nullable: false,
-                defaultValue: 0);
+                nullable: true);
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_Establishment",
@@ -192,8 +191,7 @@ namespace Projeto.Migrations
                 table: "Establishment",
                 column: "UserFK",
                 principalTable: "Users",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                principalColumn: "Id");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -223,7 +221,7 @@ namespace Projeto.Migrations
                 table: "Establishment");
 
             migrationBuilder.DropColumn(
-                name: "TypeEstablishment",
+                name: "UserFK",
                 table: "Establishment");
 
             migrationBuilder.RenameTable(
@@ -236,7 +234,7 @@ namespace Projeto.Migrations
                 newName: "UserName");
 
             migrationBuilder.RenameColumn(
-                name: "UserFK",
+                name: "TypeEstablishment",
                 table: "Establishments",
                 newName: "EstablishmentType");
 

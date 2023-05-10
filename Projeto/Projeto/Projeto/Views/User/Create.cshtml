@@ -1,0 +1,29 @@
+﻿@model Projeto.Models.User
+@{
+    <div class="container-sm mt-3">
+        <div class="card">
+            <div class="card-header text-center">Criar Utilizador</div>
+            <div class="card-body">
+                <form method="post">
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email</label>
+                        <input asp-for="Email" type="email" class="form-control" id="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="username" class="form-label">Username</label>
+                        <input asp-for="Username" type="text" class="form-control" id="username" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password" class="form-label">Password</label>
+                        <input asp-for="Password" type="password" class="form-control" id="password" required>
+                    </div>
+
+                    <button type="submit" name="submit" class="btn btn-primary">Criar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <a asp-action="Index">Ver Utilizadores</a>
+}

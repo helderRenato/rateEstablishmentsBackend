@@ -1,0 +1,61 @@
+﻿@model Projeto.Models.Establishment; 
+
+@{
+    <div class="container-sm mt-3">
+        <div class="card">
+            <div class="card-header text-center">Criar Estabelecimento</div>
+            <div class="card-body">
+                <form method="post">
+                @*Nome do Estabelecimento*@
+                    <div class="form-group">
+                        <label for="name" class="form-label">Name</label>
+                        <input asp-for="Name" type="text" class="form-control" id="name" required>
+                    </div>
+                @*Cidade do Estabelecimento*@
+                    <div class="form-group">
+                        <label for="city" class="form-label">City</label>
+                        <input asp-for="City" type="text" class="form-control" id="city" required>
+                    </div>
+                @*Endereço do Estabelecimento*@
+                    <div class="form-group">
+                        <label for="address" class="form-label">Address</label>
+                        <input asp-for="Address" onclick="" type="text" class="form-control" id="address" required>
+                    </div>
+                @*Nº de Telemóvel do Estabelecimento*@
+                    <div class="form-group">
+                        <label for="phone" class="form-label">Phone</label>
+                        <input asp-for="Phone" onclick="" type="text" class="form-control" id="phone" required>
+                    </div>
+                @*Tipo de Estabelecimento*@
+                    <div class="form-group">
+                        <label for="type" class="form-label">Establishment Type</label>
+                        <div class="col-md-10">
+                            <select asp-for="TypeEstablishment" asp-items="Html.GetEnumSelectList<Establishment.establishmentType>()">
+                                <option selected="selected" value="">Please select</option>
+                            </select>
+                        </div>
+                    </div>
+                @*Email do estabelecimento*@
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email</label>
+                        <input asp-for="User.Email" type="email" class="form-control" id="email" required>
+                    </div>
+                @*Password da conta*@
+                    <div class="form-group">
+                        <label for="email" class="form-label">Password</label>
+                        <input asp-for="User.Password" type="password" class="form-control" id="email" required>
+                    </div>
+                        
+                <input id="StudentId" 
+                    asp-for="User.Username" 
+                    type="hidden" 
+                    value="Establishment" />
+
+                    <button type="submit" name="submit" class="btn btn-primary">Criar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <a asp-action="Index">Ver Estabelecimentos</a>
+}

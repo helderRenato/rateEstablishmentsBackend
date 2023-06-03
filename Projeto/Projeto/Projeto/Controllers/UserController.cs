@@ -57,6 +57,7 @@ namespace Projeto.Controllers
                     return View(user);
                 }
 
+                _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }

@@ -14,7 +14,7 @@ namespace Projeto.Models
         /// </summary>
         [Required(ErrorMessage = "O {0} é de preenchimento obrigatório")]
         [StringLength(50)]
-        [RegularExpression("[a-z]+[0-9]", ErrorMessage = "O username apenas pode conter letras minúsculas")]
+        [RegularExpression("^[a-z]+[0-9]*$", ErrorMessage = "O username apenas pode conter letras minúsculas")]
         public string Username { get; set; }
 
         /// <summary>

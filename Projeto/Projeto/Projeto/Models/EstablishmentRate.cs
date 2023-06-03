@@ -11,12 +11,13 @@ namespace Projeto.Models
 
         public int Stars { get; set; }
 
-        [ForeignKey(nameof(UserFK))]
+        [ForeignKey(nameof(User))]
         public int UserFK { get; set; }
         public User User { get; set; }
 
-        [ForeignKey(nameof(EstablishmentFK))]
-        public Establishment Establishment { get; set; }
+        [ForeignKey(nameof(Establishment))]
         public int EstablishmentFK { get; set; }
+        public Establishment Establishment { get; set; }
+        
     }
 }

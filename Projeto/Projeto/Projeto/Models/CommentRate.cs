@@ -10,11 +10,11 @@ namespace Projeto.Models
 
         public int Likes { get; set; }
 
-        [ForeignKey(nameof(CommentFK))]
+        [ForeignKey(nameof(Comment))]
         public int CommentFK { get; set; }
         public Comment Comment { get; set; }
 
-        [ForeignKey(nameof(UserFK))]
+        [ForeignKey(nameof(User))]
         public int UserFK { get; set; }
         public User User { get; set; }
     }

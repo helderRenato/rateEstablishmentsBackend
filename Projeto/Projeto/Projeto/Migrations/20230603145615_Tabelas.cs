@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Projeto.Migrations
 {
-    public partial class Users : Migration
+    public partial class Tabelas : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -49,22 +49,22 @@ namespace Projeto.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Establishments",
+                name: "Establishment",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    City = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EstablishmentType = table.Column<int>(type: "int", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    City = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(9)", maxLength: 9, nullable: false),
+                    TypeEstablishment = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Establishments", x => x.Id);
+                    table.PrimaryKey("PK_Establishment", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -73,10 +73,9 @@ namespace Projeto.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsAdmin = table.Column<bool>(type: "bit", nullable: false)
+                    Username = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -189,6 +188,104 @@ namespace Projeto.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Comment",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Denounced = table.Column<bool>(type: "bit", nullable: false),
+                    IsAnswer = table.Column<bool>(type: "bit", nullable: false),
+                    EstablishmentFK = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comment", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Comment_Establishment_EstablishmentFK",
+                        column: x => x.EstablishmentFK,
+                        principalTable: "Establishment",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Photo",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Path = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    File = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EstablishmentFK = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Photo", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Photo_Establishment_EstablishmentFK",
+                        column: x => x.EstablishmentFK,
+                        principalTable: "Establishment",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EstablishmentsRate",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Stars = table.Column<int>(type: "int", nullable: false),
+                    UserFK = table.Column<int>(type: "int", nullable: false),
+                    EstablishmentFK = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EstablishmentsRate", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EstablishmentsRate_Establishment_EstablishmentFK",
+                        column: x => x.EstablishmentFK,
+                        principalTable: "Establishment",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EstablishmentsRate_Users_UserFK",
+                        column: x => x.UserFK,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CommentRate",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Likes = table.Column<int>(type: "int", nullable: false),
+                    CommentFK = table.Column<int>(type: "int", nullable: false),
+                    UserFK = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CommentRate", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_CommentRate_Comment_CommentFK",
+                        column: x => x.CommentFK,
+                        principalTable: "Comment",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CommentRate_Users_UserFK",
+                        column: x => x.UserFK,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -227,6 +324,36 @@ namespace Projeto.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comment_EstablishmentFK",
+                table: "Comment",
+                column: "EstablishmentFK");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CommentRate_CommentFK",
+                table: "CommentRate",
+                column: "CommentFK");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CommentRate_UserFK",
+                table: "CommentRate",
+                column: "UserFK");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EstablishmentsRate_EstablishmentFK",
+                table: "EstablishmentsRate",
+                column: "EstablishmentFK");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EstablishmentsRate_UserFK",
+                table: "EstablishmentsRate",
+                column: "UserFK");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Photo_EstablishmentFK",
+                table: "Photo",
+                column: "EstablishmentFK");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -247,16 +374,28 @@ namespace Projeto.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Establishments");
+                name: "CommentRate");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "EstablishmentsRate");
+
+            migrationBuilder.DropTable(
+                name: "Photo");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Comment");
+
+            migrationBuilder.DropTable(
+                name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Establishment");
         }
     }
 }

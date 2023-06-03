@@ -9,15 +9,23 @@ namespace Projeto.Models
         [Key]
         public int Id { get; set; }
 
+        /// <summary>
+        /// O texto no comentário
+        /// </summary>
         public string Text { get; set; }
 
+        /// <summary>
+        /// Caso o comentário for denunciado
+        /// </summary>
         public Boolean Denounced {get; set;}
+
 
         public Boolean IsAnswer { get; set; }
 
-        [ForeignKey(nameof(EstablishmentFK))]
-        public Establishment Establishment { get; set; }
+        [ForeignKey(nameof(Establishment))]
         public int EstablishmentFK { get; set; }
+        public Establishment Establishment { get; set; }
+        
 
 
         public ICollection<CommentRate> ListCommentRate { get; set; }

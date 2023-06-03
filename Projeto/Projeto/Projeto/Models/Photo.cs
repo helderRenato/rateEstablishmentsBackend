@@ -15,7 +15,7 @@ namespace Projeto.Models
         public string File { get; set; }
 
 
-        [ForeignKey(nameof(EstablishmentFK))]
+        [ForeignKey(nameof(Establishment))]
         public int EstablishmentFK { get; set; }
         public Establishment Establishment { get; set; }
 

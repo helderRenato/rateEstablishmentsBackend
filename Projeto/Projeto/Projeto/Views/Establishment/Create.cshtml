@@ -38,19 +38,15 @@
                 @*Email do estabelecimento*@
                     <div class="form-group">
                         <label for="email" class="form-label">Email</label>
-                        <input asp-for="User.Email" type="email" class="form-control" id="email" required>
+                        <input asp-for="Email" type="email" class="form-control" id="email" required>
                     </div>
                 @*Password da conta*@
                     <div class="form-group">
                         <label for="email" class="form-label">Password</label>
-                        <input asp-for="User.Password" type="password" class="form-control" id="email" required>
+                        <input asp-for="Password" type="password" class="form-control" id="email" required>
                     </div>
                         
-                <input id="StudentId" 
-                    asp-for="User.Username" 
-                    type="hidden" 
-                    value="Establishment" />
-
+               
                     <button type="submit" name="submit" class="btn btn-primary">Criar</button>
                 </form>
             </div>

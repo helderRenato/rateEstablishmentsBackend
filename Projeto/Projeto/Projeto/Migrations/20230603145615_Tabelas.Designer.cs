@@ -12,8 +12,8 @@ using Projeto.Areas.Identity.Data;
 namespace Projeto.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20230508180658_tabelas")]
-    partial class tabelas
+    [Migration("20230603145615_Tabelas")]
+    partial class Tabelas
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -265,23 +265,17 @@ namespace Projeto.Migrations
                     b.Property<int>("CommentFK")
                         .HasColumnType("int");
 
-                    b.Property<int>("CommentId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Likes")
                         .HasColumnType("int");
 
                     b.Property<int>("UserFK")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("id");
 
-                    b.HasIndex("CommentId");
+                    b.HasIndex("CommentFK");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserFK");
 
                     b.ToTable("CommentRate");
                 });
@@ -296,29 +290,37 @@ namespace Projeto.Migrations
 
                     b.Property<string>("Address")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("City")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phone")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(9)
+                        .HasColumnType("nvarchar(9)");
 
                     b.Property<int>("TypeEstablishment")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserFK")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserFK");
 
                     b.ToTable("Establishment");
                 });
@@ -340,14 +342,11 @@ namespace Projeto.Migrations
                     b.Property<int>("UserFK")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("EstablishmentFK");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserFK");
 
                     b.ToTable("EstablishmentsRate");
                 });
@@ -361,9 +360,6 @@ namespace Projeto.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("EstablishmentFK")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EstablishmentId")
                         .HasColumnType("int");
 
                     b.Property<string>("File")
@@ -380,7 +376,7 @@ namespace Projeto.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EstablishmentId");
+                    b.HasIndex("EstablishmentFK");
 
                     b.ToTable("Photo");
                 });
@@ -395,7 +391,8 @@ namespace Projeto.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -403,7 +400,8 @@ namespace Projeto.Migrations
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -476,26 +474,17 @@ namespace Projeto.Migrations
                 {
                     b.HasOne("Projeto.Models.Comment", "Comment")
                         .WithMany("ListCommentRate")
-                        .HasForeignKey("CommentId")
+                        .HasForeignKey("CommentFK")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Projeto.Models.User", "User")
                         .WithMany("ListCommentRate")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("UserFK")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Comment");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Projeto.Models.Establishment", b =>
-                {
-                    b.HasOne("Projeto.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserFK");
 
                     b.Navigation("User");
                 });
@@ -510,7 +499,7 @@ namespace Projeto.Migrations
 
                     b.HasOne("Projeto.Models.User", "User")
                         .WithMany("ListEstablishmentRate")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("UserFK")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -523,7 +512,7 @@ namespace Projeto.Migrations
                 {
                     b.HasOne("Projeto.Models.Establishment", "Establishment")
                         .WithMany("ListPhoto")
-                        .HasForeignKey("EstablishmentId")
+                        .HasForeignKey("EstablishmentFK")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

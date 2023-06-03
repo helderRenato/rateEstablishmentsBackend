@@ -38,7 +38,12 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Password)
             </td>
+            <td>
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
         </tr>
 }
     </tbody>
 </table>
+
+<a asp-action="Create">Create</a>

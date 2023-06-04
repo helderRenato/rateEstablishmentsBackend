@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Projeto.Migrations
 {
-    public partial class Tabelas : Migration
+    public partial class tabelas : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -217,8 +217,7 @@ namespace Projeto.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Path = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    File = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EstablishmentFK = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>

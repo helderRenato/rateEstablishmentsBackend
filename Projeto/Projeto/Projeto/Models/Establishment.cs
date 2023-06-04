@@ -14,7 +14,7 @@ namespace Projeto.Models
         /// </summary>
         [EmailAddress(ErrorMessage = "O {0} não está corretamente escrito")]
         [Required(ErrorMessage = "O {0} é de preenchimento obrigatório")]
-        [RegularExpression("[a-z._0-9]+@[a-z._0-9].com", ErrorMessage = "O {0} tem de ser válido ex:xxxx@zzzz.com")]
+        [RegularExpression("[a-z._0-9]+@[a-z]+.com", ErrorMessage = "O {0} tem de ser válido ex:xxxx@zzzz.com")]
         [StringLength(40)]
         public string Email { get; set; }
 
@@ -24,7 +24,7 @@ namespace Projeto.Models
         /// </summary>
         [Required(ErrorMessage = "O {0} é de preenchimento obrigatório")]
         [DataType(DataType.Password)]
-        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8}$", ErrorMessage = "A {0} deve ter pelo menos 8 caractéres ,conter pelo menos uma letra minúscula, uma letra maiúscula, um dígito e um carácter especial")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$", ErrorMessage = "A {0} deve ter pelo menos 8 caractéres ,conter pelo menos uma letra minúscula, uma letra maiúscula, um dígito e um carácter especial")]
         public string Password { get; set; }
 
         /// <summary>

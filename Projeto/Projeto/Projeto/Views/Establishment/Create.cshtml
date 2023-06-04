@@ -1,57 +1,91 @@
 ﻿@model Projeto.Models.Establishment; 
 
 @{
-    <div class="container-sm mt-3">
-        <div class="card">
-            <div class="card-header text-center">Criar Estabelecimento</div>
-            <div class="card-body">
-                <form method="post">
-                @*Nome do Estabelecimento*@
-                    <div class="form-group">
-                        <label for="name" class="form-label">Name</label>
-                        <input asp-for="Name" type="text" class="form-control" id="name" required>
-                    </div>
-                @*Cidade do Estabelecimento*@
-                    <div class="form-group">
-                        <label for="city" class="form-label">City</label>
-                        <input asp-for="City" type="text" class="form-control" id="city" required>
-                    </div>
-                @*Endereço do Estabelecimento*@
-                    <div class="form-group">
-                        <label for="address" class="form-label">Address</label>
-                        <input asp-for="Address" onclick="" type="text" class="form-control" id="address" required>
-                    </div>
-                @*Nº de Telemóvel do Estabelecimento*@
-                    <div class="form-group">
-                        <label for="phone" class="form-label">Phone</label>
-                        <input asp-for="Phone" onclick="" type="text" class="form-control" id="phone" required>
-                    </div>
-                @*Tipo de Estabelecimento*@
-                    <div class="form-group">
-                        <label for="type" class="form-label">Establishment Type</label>
-                        <div class="col-md-10">
-                            <select asp-for="TypeEstablishment" asp-items="Html.GetEnumSelectList<Establishment.establishmentType>()">
-                                <option selected="selected" value="">Please select</option>
-                            </select>
-                        </div>
-                    </div>
-                @*Email do estabelecimento*@
-                    <div class="form-group">
-                        <label for="email" class="form-label">Email</label>
-                        <input asp-for="Email" type="email" class="form-control" id="email" required>
-                    </div>
-                @*Password da conta*@
-                    <div class="form-group">
-                        <label for="email" class="form-label">Password</label>
-                        <input asp-for="Password" type="password" class="form-control" id="email" required>
-                    </div>
-                        
-               
-                    <button type="submit" name="submit" class="btn btn-primary">Criar</button>
-                </form>
-            </div>
-        </div>
-    </div>
+   ViewData["Title"] = "Criar";
+}
 
-    <a asp-action="Index">Ver Estabelecimentos</a>
+<h1>Criar um novo Estabelecimento</h1>
+
+<hr />
+
+
+<div class="row">
+   <div class="col-md-4">
+      <form asp-action="Create" method="post" enctype="multipart/form-data">
+
+         @* espaço para mostrar as mensagens de erro gerais  *@
+         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+         <div class="form-group">
+            <label asp-for="Email" class="control-label"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+         </div>
+
+         <div class="form-group">
+            <label asp-for="Password" class="control-label"></label>
+            <input asp-for="Password" class="form-control" type="password"/>
+            <span asp-validation-for="Password" class="text-danger"></span>
+         </div>
+
+         <div class="form-group">
+            <label asp-for="Name" class="control-label"></label>
+            <input asp-for="Name" class="form-control"/>
+            <span asp-validation-for="Name" class="text-danger"></span>
+         </div>
+
+        <div class="form-group">
+            <label asp-for="City" class="control-label"></label>
+            <input asp-for="City" class="form-control"/>
+            <span asp-validation-for="City" class="text-danger"></span>
+         </div>
+
+         <div class="form-group">
+            <label asp-for="Address" class="control-label"></label>
+            <input asp-for="Address" class="form-control"/>
+            <span asp-validation-for="Address" class="text-danger"></span>
+         </div>
+
+         <div class="form-group">
+            <label asp-for="Phone" class="control-label"></label>
+            <input asp-for="Phone" class="form-control"/>
+            <span asp-validation-for="Phone" class="text-danger"></span>
+         </div>
+
+        <div class="form-group">
+            <label for="type" class="form-label">Establishment Type</label>
+                <div class="col-md-10">
+                    <select asp-for="TypeEstablishment" asp-items="Html.GetEnumSelectList<Establishment.establishmentType>()">
+                        <option selected="selected" value="">Please select</option>
+                    </select>
+                </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">Fotografia</label>
+            <input class="form-control"
+                   type="file"
+                   accept=".jpg,.jpeg,.png"
+                   name="foto"
+                   required/>
+         </div>
+
+
+
+         <div class="form-group">
+            <input type="submit" value="Create" class="btn btn-primary" />
+         </div>
+
+      </form>
+   </div>
+</div>
+
+<div>
+   <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+   @{
+      await Html.RenderPartialAsync("_ValidationScriptsPartial");
+   }
 }

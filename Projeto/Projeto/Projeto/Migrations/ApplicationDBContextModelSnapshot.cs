@@ -224,6 +224,60 @@ namespace Projeto.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Projeto.Models.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<bool>("Denounced")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("EstablishmentFK")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsAnswer")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EstablishmentFK");
+
+                    b.ToTable("Comment");
+                });
+
+            modelBuilder.Entity("Projeto.Models.CommentRate", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
+
+                    b.Property<int>("CommentFK")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Likes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserFK")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("CommentFK");
+
+                    b.HasIndex("UserFK");
+
+                    b.ToTable("CommentRate");
+                });
+
             modelBuilder.Entity("Projeto.Models.Establishment", b =>
                 {
                     b.Property<int>("Id")
@@ -234,22 +288,23 @@ namespace Projeto.Migrations
 
                     b.Property<string>("Address")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("City")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("EstablishmentType")
-                        .HasColumnType("int");
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -257,11 +312,66 @@ namespace Projeto.Migrations
 
                     b.Property<string>("Phone")
                         .IsRequired()
+                        .HasMaxLength(9)
+                        .HasColumnType("nvarchar(9)");
+
+                    b.Property<int>("TypeEstablishment")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Establishment");
+                });
+
+            modelBuilder.Entity("Projeto.Models.EstablishmentRate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("EstablishmentFK")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Stars")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserFK")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EstablishmentFK");
+
+                    b.HasIndex("UserFK");
+
+                    b.ToTable("EstablishmentsRate");
+                });
+
+            modelBuilder.Entity("Projeto.Models.Photo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("EstablishmentFK")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Establishments");
+                    b.HasIndex("EstablishmentFK");
+
+                    b.ToTable("Photo");
                 });
 
             modelBuilder.Entity("Projeto.Models.User", b =>
@@ -274,18 +384,17 @@ namespace Projeto.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsAdmin")
-                        .HasColumnType("bit");
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserName")
+                    b.Property<string>("Username")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -341,6 +450,87 @@ namespace Projeto.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Projeto.Models.Comment", b =>
+                {
+                    b.HasOne("Projeto.Models.Establishment", "Establishment")
+                        .WithMany("ListComment")
+                        .HasForeignKey("EstablishmentFK")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Establishment");
+                });
+
+            modelBuilder.Entity("Projeto.Models.CommentRate", b =>
+                {
+                    b.HasOne("Projeto.Models.Comment", "Comment")
+                        .WithMany("ListCommentRate")
+                        .HasForeignKey("CommentFK")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Projeto.Models.User", "User")
+                        .WithMany("ListCommentRate")
+                        .HasForeignKey("UserFK")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Comment");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Projeto.Models.EstablishmentRate", b =>
+                {
+                    b.HasOne("Projeto.Models.Establishment", "Establishment")
+                        .WithMany("ListEstablishmentRate")
+                        .HasForeignKey("EstablishmentFK")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Projeto.Models.User", "User")
+                        .WithMany("ListEstablishmentRate")
+                        .HasForeignKey("UserFK")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Establishment");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Projeto.Models.Photo", b =>
+                {
+                    b.HasOne("Projeto.Models.Establishment", "Establishment")
+                        .WithMany("ListPhoto")
+                        .HasForeignKey("EstablishmentFK")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Establishment");
+                });
+
+            modelBuilder.Entity("Projeto.Models.Comment", b =>
+                {
+                    b.Navigation("ListCommentRate");
+                });
+
+            modelBuilder.Entity("Projeto.Models.Establishment", b =>
+                {
+                    b.Navigation("ListComment");
+
+                    b.Navigation("ListEstablishmentRate");
+
+                    b.Navigation("ListPhoto");
+                });
+
+            modelBuilder.Entity("Projeto.Models.User", b =>
+                {
+                    b.Navigation("ListCommentRate");
+
+                    b.Navigation("ListEstablishmentRate");
                 });
 #pragma warning restore 612, 618
         }

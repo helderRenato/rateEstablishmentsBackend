@@ -1,0 +1,22 @@
+﻿@model Projeto.Models.Photo; 
+
+@{
+    <form method="post">
+        <div class="form-group">
+            <label asp-for="Name" class="col-md-2 control-label"></label>
+             <input class="form-control" type="file" id="formFile" accept=".jpg,.png" name = "fotoUser1" asp-for = "Name" aria-required = "true">
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Name" class="col-md-2 control-label"></label>
+             <input class="form-control" type="file" id="formFile" accept=".jpg,.png" name = "fotoUser2" asp-for = "Name" aria-required = "true">
+        </div>
+
+       <div class="form-group">
+            <label asp-for="Name" class="col-md-2 control-label"></label>
+             <input class="form-control" type="file" id="formFile" accept=".jpg,.png" name = "fotoUser3" asp-for = "Name" aria-required = "true">
+        </div>
+
+        <button type="submit" name="submit" class="btn btn-primary">Criar</button>
+    </form>
+}

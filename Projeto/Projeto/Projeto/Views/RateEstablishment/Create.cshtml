@@ -16,26 +16,26 @@
 
          @*Selecionar quem é o utilizador a fazer a avaliação*@
          <div class="form-group">
-             <label asp-for="User" class="control-label"></label>
-             <select class="form-select" asp-for = "User">
+             <label asp-for="UserFK" class="control-label"></label>
+             <select class="form-select" asp-for = "UserFK">
                 @foreach(var user in ViewData["Users"] as IEnumerable<User>)
                 {
-                    <option value="@user">@user.Username</option>
+                    <option value="@user.Id">@user.Username</option>
                 }
             </select>
-            <span asp-validation-for="User" class="text-danger"></span>
+            <span asp-validation-for="UserFK" class="text-danger"></span>
         </div>
 
          @*Selecionar quem é o utilizador a fazer a avaliação*@
          <div class="form-group">
-             <label asp-for="Establishment" class="control-label"></label>
-             <select class="form-select" asp-for = "Establishment">
+             <label asp-for="EstablishmentFK" class="control-label"></label>
+             <select class="form-select" asp-for = "EstablishmentFK">
                 @foreach(var establishment in ViewData["Establishments"] as IEnumerable<Establishment>)
                 {
-                    <option value="@establishment">@establishment.Name</option>
+                    <option value="@establishment.Id">@establishment.Name</option>
                 }
             </select>
-            <span asp-validation-for="Establishment" class="text-danger"></span>
+            <span asp-validation-for="EstablishmentFK" class="text-danger"></span>
         </div>
 
          @*Selecionar quem é o estabelecimento a ser avaliado*@

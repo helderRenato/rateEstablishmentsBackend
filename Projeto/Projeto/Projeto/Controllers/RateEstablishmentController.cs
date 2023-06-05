@@ -30,11 +30,25 @@ namespace Projeto.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id, User, Establishment, Stars, Comment")] EstablishmentRate establishmentRate)
+        public async Task<IActionResult> Create([Bind("Id, UserFK, EstablishmentFK, Stars, Comment")] EstablishmentRate establishmentRate)
         {
+            ViewData["Users"] = await _context.Users.ToListAsync();
+            ViewData["Establishments"] = await _context.Establishment.ToListAsync();
+
+            establishmentRate.User = _context.Users
+                .Where(a => a.Id == establishmentRate.UserFK)
+                .FirstOrDefault();
+
+
+            establishmentRate.Establishment = _context.Establishment
+                .Where(a => a.Id == establishmentRate.EstablishmentFK)
+                .FirstOrDefault();
+
             if (ModelState.IsValid)
             {
-                 
+                _context.Add(establishmentRate);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
 
             return View();

@@ -6,6 +6,13 @@ namespace Projeto.Models
     public class Establishment
     {
 
+        public Establishment()
+        {
+            ListComment = new List<Comment>();
+            ListEstablishmentRate = new List<EstablishmentRate>();
+            ListPhoto = new HashSet<Photo>();
+        }
+
         [Key]
         public int Id { get; set; }
 
@@ -78,11 +85,6 @@ namespace Projeto.Models
 
         public ICollection<Photo> ListPhoto { get; set; }
 
-        public Establishment()
-        {
-            ListComment = new List<Comment>();
-            ListEstablishmentRate = new List<EstablishmentRate>();
-            ListPhoto = new List<Photo>();
-        }
+        
     }
 }

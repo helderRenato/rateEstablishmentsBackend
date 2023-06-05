@@ -73,6 +73,21 @@ namespace Projeto.Controllers
                     return View(establishment);
                 }
 
+
+                //Associar a imagem ao estabelecimento na base de dados
+                establishment.ListPhoto
+                       .Add(new Photo
+                       {
+                           Date = DateTime.Now,
+                           Name = nomeFoto,
+                           EstablishmentFK = establishment.Id
+                       });
+
+                //Salvar na base de dados os dados do estabelecimento
+                _context.Add(establishment);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+
                 //Guardar a imagem em disco 
                 if (foto != null)
                 {
@@ -89,18 +104,8 @@ namespace Projeto.Controllers
                     using var stream = new FileStream(novaLocalizacao, FileMode.Create);
                     await foto.CopyToAsync(stream);
 
-                    //Associar a imagem ao estabelecimento na base de dados
-                    establishment.ListPhoto
-                           .Add(new Photo
-                           {
-                               Date = DateTime.Now,
-                               Name = nomeFoto,
-                           });
+                    
                 }
-
-                _context.Add(establishment);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
             }
 
             return View();

@@ -8,6 +8,7 @@ namespace Projeto.Models
         [Key]
         public int id {  get; set; }
 
+
         public int Likes { get; set; }
 
         [ForeignKey(nameof(Comment))]

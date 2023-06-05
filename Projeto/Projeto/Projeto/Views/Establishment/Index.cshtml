@@ -25,7 +25,11 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.TypeEstablishment)
-            </th>         </tr>
+            </th> 
+            <th>
+                @Html.DisplayNameFor(model => model.ListPhoto)
+            </th>
+        </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
@@ -48,7 +52,21 @@
             <td>
                 @Html.DisplayFor(modelItem => item.TypeEstablishment)
             </td>
-        </tr>
+                @*Verificar se o estabelecimento possui fotografia*@
+                @if(item.ListPhoto != null && item.ListPhoto.Count > 0)
+                {
+                    @foreach (var photo in item.ListPhoto)
+                    {
+                        <img src="~/Photos/User/@photo.Name"/>
+                    }
+                }
+                else
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ListPhoto)
+                    </td> 
+                }
+            </tr>
 
 }
     </tbody>

@@ -12,6 +12,9 @@ namespace Projeto.Models
         /// <summary>
         /// O texto no comentário
         /// </summary>
+        [Required(ErrorMessage = "O comentário é de preenchimento obrigatório")]
+        [StringLength(50)]
+        [RegularExpression("^.{20,}$", ErrorMessage = "O comentário deve ter pelo menos 20 caractéres")]
         public string Text { get; set; }
 
         /// <summary>
@@ -22,12 +25,7 @@ namespace Projeto.Models
 
         public Boolean IsAnswer { get; set; }
 
-        [ForeignKey(nameof(Establishment))]
-        public int EstablishmentFK { get; set; }
-        public Establishment Establishment { get; set; }
         
-
-
         public ICollection<CommentRate> ListCommentRate { get; set; }
 
         public Comment()

@@ -12,8 +12,8 @@ using Projeto.Areas.Identity.Data;
 namespace Projeto.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20230604072123_tabelas")]
-    partial class tabelas
+    [Migration("20230605102725_criacaoModelo")]
+    partial class criacaoModelo
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -237,7 +237,7 @@ namespace Projeto.Migrations
                     b.Property<bool>("Denounced")
                         .HasColumnType("bit");
 
-                    b.Property<int>("EstablishmentFK")
+                    b.Property<int?>("EstablishmentId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsAnswer")
@@ -245,11 +245,12 @@ namespace Projeto.Migrations
 
                     b.Property<string>("Text")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EstablishmentFK");
+                    b.HasIndex("EstablishmentId");
 
                     b.ToTable("Comment");
                 });
@@ -333,6 +334,9 @@ namespace Projeto.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("CommentFK")
+                        .HasColumnType("int");
+
                     b.Property<int>("EstablishmentFK")
                         .HasColumnType("int");
 
@@ -343,6 +347,8 @@ namespace Projeto.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CommentFK");
 
                     b.HasIndex("EstablishmentFK");
 
@@ -456,13 +462,9 @@ namespace Projeto.Migrations
 
             modelBuilder.Entity("Projeto.Models.Comment", b =>
                 {
-                    b.HasOne("Projeto.Models.Establishment", "Establishment")
+                    b.HasOne("Projeto.Models.Establishment", null)
                         .WithMany("ListComment")
-                        .HasForeignKey("EstablishmentFK")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Establishment");
+                        .HasForeignKey("EstablishmentId");
                 });
 
             modelBuilder.Entity("Projeto.Models.CommentRate", b =>
@@ -486,6 +488,12 @@ namespace Projeto.Migrations
 
             modelBuilder.Entity("Projeto.Models.EstablishmentRate", b =>
                 {
+                    b.HasOne("Projeto.Models.Comment", "Comment")
+                        .WithMany()
+                        .HasForeignKey("CommentFK")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Projeto.Models.Establishment", "Establishment")
                         .WithMany("ListEstablishmentRate")
                         .HasForeignKey("EstablishmentFK")
@@ -497,6 +505,8 @@ namespace Projeto.Migrations
                         .HasForeignKey("UserFK")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Comment");
 
                     b.Navigation("Establishment");
 

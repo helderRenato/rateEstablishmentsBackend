@@ -42,9 +42,10 @@ namespace Projeto.Controllers
 
 
         [HttpPost("create")]
-        public IActionResult CreateEstablishment(Establishment establishment)
+        public IActionResult CreateEstablishment([FromForm] EstablishmentTransportModel establishmentAux)
         {
-            establishment.Id = _dbcontext.Establishment.Max().Id + 1;
+            var Idax = _dbcontext.Establishment.Max()!.Id + 1;
+            Establishment establishment = new Establishment { Id = Idax };
             _dbcontext.Establishment.Add(establishment);
 
             return CreatedAtAction(nameof(GetUser), new { id = establishment.Id }, establishment);

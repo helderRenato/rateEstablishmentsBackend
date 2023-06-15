@@ -36,10 +36,7 @@ namespace Projeto.Models
 
         public string Address { get; set; }
 
-        /// <summary>
-        /// Número de telemóvel do estabelecimento
-        /// </summary>
-        public string Phone { get; set; }
+        public IFormFile File { get; set; }
 
         /// <summary>
         /// Tipo de Estabelecimento
@@ -54,9 +51,7 @@ namespace Projeto.Models
             Hotel
         }
 
-
-
     }
 
 }
-}
+

@@ -15,7 +15,7 @@ namespace Projeto.Controllers
         {
             _context = context;
         }
-        public async Task<IActionResult> IndexAsync()
+        public async Task<IActionResult> Index()
         {
             return View(await _context.Rating.ToListAsync());
         }
@@ -30,7 +30,7 @@ namespace Projeto.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Stars, UserFK, EstablishmentFK")] Rating establishmentRate)
+        public async Task<IActionResult> Create([Bind("Stars,UserFK,EstablishmentFK")] Rating establishmentRate)
         {
             if (ModelState.IsValid)
             {

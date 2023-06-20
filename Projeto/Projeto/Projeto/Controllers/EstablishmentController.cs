@@ -18,9 +18,6 @@ namespace Projeto.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            //Adicionar a lista de fotografias a uma viewbag para apresentar na View 
-            var photos = await _context.Photo.ToListAsync();
-            ViewData["Photos"] = photos;
             return View(await _context.Establishment.ToListAsync());
         }
 
@@ -60,9 +57,7 @@ namespace Projeto.Controllers
                     Photo photo = new Photo
                     {
                         Date = DateTime.Now,
-                        Name = nomeFoto,
-                        Establishment = establishment,
-                        EstablishmentFK = establishment.Id
+                        Name = nomeFoto
                     };
 
                     //adicionar a lista 
@@ -146,16 +141,37 @@ namespace Projeto.Controllers
         {
             if (_context.Users == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.Users'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.Establishment'  is null.");
             }
-            var criadores = await _context.Users.FindAsync(id);
-            if (criadores != null)
+            var establishment = await _context.Establishment.FindAsync(id);
+            if (establishment != null)
             {
-                _context.Users.Remove(criadores);
+                _context.Establishment.Remove(establishment);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Animais/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+
+            if (id == null || _context.Establishment == null)
+            {
+                return NotFound();
+            }
+
+            var establishment = await _context.Establishment
+                                   .Include(a => a.ListPhotos)
+                                   .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (establishment == null)
+            {
+                return NotFound();
+            }
+
+            return View(establishment);
         }
     }
 }

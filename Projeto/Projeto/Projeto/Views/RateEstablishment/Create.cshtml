@@ -23,6 +23,7 @@
                     asp-items="ViewBag.Users">
             </select>
          </div>
+         @Html.HiddenFor(model => model.Establishment)
 
          @*Selecionar quem é o estabelecimento a fazer a avaliação*@
          <div class="form-group">
@@ -33,6 +34,7 @@
                     asp-items="ViewBag.Establishments">
             </select>
          </div>
+         @Html.HiddenFor(model => model.User)
 
          @*Selecionar quem é o estabelecimento a ser avaliado*@
          @*Comentar e Dar estrelas*@

@@ -6,6 +6,13 @@ namespace Projeto.Models
     public class User
     {
 
+        public User()
+        {
+
+            ListRatings = new List<Rating>();
+            ListComments = new List<Comment>();
+        }
+
         [Key]
         public int Id { get; set; }
 
@@ -41,11 +48,6 @@ namespace Projeto.Models
         public ICollection<Comment> ListComments { get; set; }
 
 
-        public User()
-        {
 
-            ListRatings = new List<Rating>();
-            ListComments = new List<Comment>();
-        }
     }
 }

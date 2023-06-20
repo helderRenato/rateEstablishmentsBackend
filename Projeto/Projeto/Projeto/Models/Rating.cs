@@ -14,11 +14,11 @@ namespace Projeto.Models
 
         [ForeignKey(nameof(User))]
         public int UserFK { get; set; } 
-        public User User { get; set; }
+        public User? User { get; set; } //Erro ao se resolver pois esta linha cria um erro no binding 
 
         [ForeignKey(nameof(Establishment))]
         public int EstablishmentFK { get; set; }
-        public Establishment Establishment { get; set; }
+        public Establishment? Establishment { get; set; } //Erro ao se resolver pois esta linha cria um erro no binding 
 
     }
 }

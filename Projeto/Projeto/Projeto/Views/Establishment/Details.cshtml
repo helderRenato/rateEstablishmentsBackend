@@ -1,0 +1,26 @@
+﻿@model Projeto.Models.Establishment
+
+@{
+   ViewData["Title"] = "Detalhes";
+}
+
+<h1>Detalhes do @Model.Name</h1>
+
+<div>
+   <hr />
+   <h4>Fotografias do @Model.Name</h4>
+
+   @foreach (var foto in Model.ListPhotos) {
+      <p>
+         <img src="~/Photos/User/@foto.Name"
+              alt="fotografia do @Model.Name"
+              width="100px" />
+      </p>
+   }
+
+
+</div>
+<div>
+   <a asp-action="Edit" asp-route-id="@Model?.Id">Editar</a> |
+   <a asp-action="Index">Regressar</a>
+</div>

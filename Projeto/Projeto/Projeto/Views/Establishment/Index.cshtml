@@ -27,9 +27,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.TypeEstablishment)
             </th> 
-            <th>
-                @Html.DisplayNameFor(model => model.ListPhotos)
-            </th>
         </tr>
     </thead>
     <tbody>
@@ -53,22 +50,10 @@
             <td>
                 @Html.DisplayFor(modelItem => item.TypeEstablishment)
             </td>
-                @*Listar as fotografias do estabelecimento*@
-                @foreach (var photo in photos)
-                {
-                    @if (item.Id == photo.EstablishmentFK)
-                    {
-                        <img src="~/Photos/User/@photo.Name" height="20px" width="20px"/>
-                    }
-                    else
-                    {
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ListPhotos)
-                        </td> 
-                    }
-                }
             <td>
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Detalhes</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Apagar</a>
             </td>
             </tr>
 

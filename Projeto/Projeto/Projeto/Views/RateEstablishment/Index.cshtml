@@ -12,12 +12,6 @@
                 @Html.DisplayNameFor(model => model.Id)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.User.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Establishment.Name)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Stars)
             </th>
         </tr>
@@ -29,13 +23,12 @@
                         @Html.DisplayFor(modelItem => item.Id)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.User.Email)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Establishment.Name)
-                    </td>
-                    <td>
                         @Html.DisplayFor(modelItem => item.Stars)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Detalhes</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Apagar</a>
                     </td>
                 </tr>
         }

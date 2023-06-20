@@ -34,12 +34,46 @@ namespace Projeto.Controllers
         {
             if (ModelState.IsValid)
             {
+                //Obviamente o utilizador nao pode dar rating duas vezes ao mesmo restaurante
+                //Caso fizer um novo rating devemos eliminar o que ele fez e adicionar o novo 
+
+                //Verificar se o user ja tem um rating
+                var ratingByUser = await _context.Rating
+                                   .Where(a => a.UserFK == establishmentRate.UserFK)
+                                   .FirstOrDefaultAsync();
+                if(ratingByUser != null)
+                {
+                    //Caso tiver primeiro eliminamos o rating anterior 
+                    var rating = await _context.Rating.FindAsync(ratingByUser.Id);
+                    _context.Rating.Remove(rating);
+                }
                 _context.Add(establishmentRate);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Details(int? id)
+        {
+
+            if (id == null || _context.Rating == null)
+            {
+                return NotFound();
+            }
+
+            var rating = await _context.Rating
+                                   .Include(a => a.User)
+                                   .Include(a => a.Establishment)
+                                   .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (rating == null)
+            {
+                return NotFound();
+            }
+
+            return View(rating);
         }
     }
 }

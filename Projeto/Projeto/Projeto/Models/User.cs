@@ -36,16 +36,16 @@ namespace Projeto.Models
         public string Password { get; set; }
 
 
-        public ICollection<EstablishmentRate> ListEstablishmentRate { get; set; }
+        public ICollection<Rating> ListRatings { get; set; }
 
-        public ICollection<CommentRate> ListCommentRate { get; set; }
+        public ICollection<Comment> ListComments { get; set; }
 
 
         public User()
         {
 
-            ListEstablishmentRate = new List<EstablishmentRate>();
-            ListCommentRate = new List<CommentRate>();
+            ListRatings = new List<Rating>();
+            ListComments = new List<Comment>();
         }
     }
 }

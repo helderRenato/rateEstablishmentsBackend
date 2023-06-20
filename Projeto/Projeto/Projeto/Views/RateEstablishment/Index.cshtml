@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Projeto.Models.EstablishmentRate>
+﻿@model IEnumerable<Projeto.Models.Rating>
 
 
 @{
@@ -20,9 +20,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Stars)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Comment.Text)
-            </th>
         </tr>
     </thead>
     <tbody>
@@ -40,11 +37,7 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Stars)
                     </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Comment.Text)
-                    </td>
-            </tr>
-
+                </tr>
         }
     </tbody>
 </table>

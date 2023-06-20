@@ -22,15 +22,12 @@ namespace Projeto.Models
         /// </summary>
         public Boolean Denounced {get; set;}
 
+        [ForeignKey(nameof(User))]
+        public int UserFK { get; set; }
+        public User User { get; set; }
 
-        public Boolean IsAnswer { get; set; }
-
-        
-        public ICollection<CommentRate> ListCommentRate { get; set; }
-
-        public Comment()
-        {
-            ListCommentRate = new List<CommentRate>();
-        }
+        [ForeignKey(nameof(Establishment))]
+        public int EstablishmentFK { get; set; }
+        public Establishment Establishment { get; set; }
     }
 }

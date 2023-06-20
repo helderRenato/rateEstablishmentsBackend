@@ -72,14 +72,14 @@ namespace Projeto.Controllers
                 return NotFound();
             }
 
-            var criadores = await _context.Users
+            var users = await _context.Users
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (criadores == null)
+            if (users == null)
             {
                 return NotFound();
             }
 
-            return View(criadores);
+            return View(users);
         }
 
         [HttpPost, ActionName("Delete")]

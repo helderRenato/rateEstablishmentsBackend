@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Projeto.Areas.Identity.Data;
 using Projeto.Models;
@@ -12,38 +13,25 @@ namespace Projeto.Controllers
 
         public RateEstablishmentController(ApplicationDBContext context)
         {
-
             _context = context;
         }
         public async Task<IActionResult> IndexAsync()
         {
-            return View(await _context.EstablishmentsRate.ToListAsync());
+            return View(await _context.Rating.ToListAsync());
         }
 
-        public async Task<IActionResult> CreateAsync()
+        public IActionResult Create()
         {
-            ViewData["Users"] = await _context.Users.ToListAsync();
-            ViewData["Establishments"] = await _context.Establishment.ToListAsync();
+            ViewData["Users"] = new SelectList(_context.Users, "Id", "Username");
+            ViewData["Establishments"] = new SelectList(_context.Establishment, "Id", "Name");
 
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id, UserFK, EstablishmentFK, Stars, Comment")] EstablishmentRate establishmentRate)
+        public async Task<IActionResult> Create([Bind("Stars, UserFK, EstablishmentFK")] Rating establishmentRate)
         {
-            ViewData["Users"] = await _context.Users.ToListAsync();
-            ViewData["Establishments"] = await _context.Establishment.ToListAsync();
-
-            establishmentRate.User = _context.Users
-                .Where(a => a.Id == establishmentRate.UserFK)
-                .FirstOrDefault();
-
-
-            establishmentRate.Establishment = _context.Establishment
-                .Where(a => a.Id == establishmentRate.EstablishmentFK)
-                .FirstOrDefault();
-
             if (ModelState.IsValid)
             {
                 _context.Add(establishmentRate);
@@ -51,7 +39,7 @@ namespace Projeto.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            return View();
+            return RedirectToAction(nameof(Index));
         }
     }
 }

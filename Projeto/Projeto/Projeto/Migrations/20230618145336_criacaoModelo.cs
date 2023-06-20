@@ -189,27 +189,6 @@ namespace Projeto.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Comment",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Text = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Denounced = table.Column<bool>(type: "bit", nullable: false),
-                    IsAnswer = table.Column<bool>(type: "bit", nullable: false),
-                    EstablishmentId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Comment", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Comment_Establishment_EstablishmentId",
-                        column: x => x.EstablishmentId,
-                        principalTable: "Establishment",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Photo",
                 columns: table => new
                 {
@@ -231,26 +210,27 @@ namespace Projeto.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CommentRate",
+                name: "Comment",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Likes = table.Column<int>(type: "int", nullable: false),
-                    CommentFK = table.Column<int>(type: "int", nullable: false),
-                    UserFK = table.Column<int>(type: "int", nullable: false)
+                    Text = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Denounced = table.Column<bool>(type: "bit", nullable: false),
+                    UserFK = table.Column<int>(type: "int", nullable: false),
+                    EstablishmentFK = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CommentRate", x => x.id);
+                    table.PrimaryKey("PK_Comment", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CommentRate_Comment_CommentFK",
-                        column: x => x.CommentFK,
-                        principalTable: "Comment",
+                        name: "FK_Comment_Establishment_EstablishmentFK",
+                        column: x => x.EstablishmentFK,
+                        principalTable: "Establishment",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CommentRate_Users_UserFK",
+                        name: "FK_Comment_Users_UserFK",
                         column: x => x.UserFK,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -258,33 +238,26 @@ namespace Projeto.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "EstablishmentsRate",
+                name: "Rating",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Stars = table.Column<int>(type: "int", nullable: false),
                     UserFK = table.Column<int>(type: "int", nullable: false),
-                    EstablishmentFK = table.Column<int>(type: "int", nullable: false),
-                    CommentFK = table.Column<int>(type: "int", nullable: false)
+                    EstablishmentFK = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EstablishmentsRate", x => x.Id);
+                    table.PrimaryKey("PK_Rating", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_EstablishmentsRate_Comment_CommentFK",
-                        column: x => x.CommentFK,
-                        principalTable: "Comment",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_EstablishmentsRate_Establishment_EstablishmentFK",
+                        name: "FK_Rating_Establishment_EstablishmentFK",
                         column: x => x.EstablishmentFK,
                         principalTable: "Establishment",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_EstablishmentsRate_Users_UserFK",
+                        name: "FK_Rating_Users_UserFK",
                         column: x => x.UserFK,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -331,39 +304,29 @@ namespace Projeto.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comment_EstablishmentId",
+                name: "IX_Comment_EstablishmentFK",
                 table: "Comment",
-                column: "EstablishmentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CommentRate_CommentFK",
-                table: "CommentRate",
-                column: "CommentFK");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CommentRate_UserFK",
-                table: "CommentRate",
-                column: "UserFK");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_EstablishmentsRate_CommentFK",
-                table: "EstablishmentsRate",
-                column: "CommentFK");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_EstablishmentsRate_EstablishmentFK",
-                table: "EstablishmentsRate",
                 column: "EstablishmentFK");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EstablishmentsRate_UserFK",
-                table: "EstablishmentsRate",
+                name: "IX_Comment_UserFK",
+                table: "Comment",
                 column: "UserFK");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Photo_EstablishmentFK",
                 table: "Photo",
                 column: "EstablishmentFK");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Rating_EstablishmentFK",
+                table: "Rating",
+                column: "EstablishmentFK");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Rating_UserFK",
+                table: "Rating",
+                column: "UserFK");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -384,13 +347,13 @@ namespace Projeto.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "CommentRate");
-
-            migrationBuilder.DropTable(
-                name: "EstablishmentsRate");
+                name: "Comment");
 
             migrationBuilder.DropTable(
                 name: "Photo");
+
+            migrationBuilder.DropTable(
+                name: "Rating");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -399,13 +362,10 @@ namespace Projeto.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Comment");
+                name: "Establishment");
 
             migrationBuilder.DropTable(
                 name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "Establishment");
         }
     }
 }

@@ -14,7 +14,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Text)
             </th>
-            
+            <th>
+                @Html.DisplayNameFor(model => model.Response)
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -26,8 +28,12 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Text)
             </td>
-            
             <td>
+                @Html.DisplayFor(modelItem => item.Response)
+            </td>
+            <td>
+                <a asp-action="Answer" asp-route-id="@item.Id">Responder</a> | 
+                <a asp-action="DeleteAnswer" asp-route-id="@item.Id">Apagar Resposta</a> | 
                 <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Detalhes</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Apagar</a> | 

@@ -41,15 +41,9 @@ namespace Projeto.Models
         /// <summary>
         /// Tipo de Estabelecimento
         /// </summary>
-        public establishmentType TypeEstablishment { get; set; }
+        public Establishment.establishmentType TypeEstablishment { get; set; }
 
-        public enum establishmentType
-        {
-            Restaurante,
-            Café,
-            Bar,
-            Hotel
-        }
+        
 
     }
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Projeto.Areas.Identity.Data;
 using Projeto.Models;
 
@@ -12,7 +13,7 @@ namespace Projeto.Controllers
 
         private ApplicationDBContext _dbcontext;
 
-        public void UserController(ApplicationDBContext dbcontext)
+        public EstablishmentTransportController(ApplicationDBContext dbcontext)
         {
             _dbcontext = dbcontext;
         }
@@ -20,10 +21,10 @@ namespace Projeto.Controllers
         private static ILogger _logger;
 
 
-        public EstablishmentTransportController(ILogger<UserTransportController> logger)
+        /*public EstablishmentTransportController(ILogger<UserTransportController> logger)
         {
             _logger = logger;
-        }
+        }*/
 
         [HttpGet]
         public ActionResult GetUser()
@@ -44,9 +45,28 @@ namespace Projeto.Controllers
         [HttpPost("create")]
         public IActionResult CreateEstablishment([FromForm] EstablishmentTransportModel establishmentAux)
         {
-            var Idax = _dbcontext.Establishment.Max()!.Id + 1;
-            Establishment establishment = new Establishment { Id = Idax };
+
+            //var Idax = _dbcontext.Establishment.Max()!.Id + 1;
+
+            //var Idax = _dbcontext.Establishment.DefaultIfEmpty().Max(r => r == null ? 0 : r.Id) + 1 ;
+            //Establishment establishment = new Establishment { Id = Idax };
+            
+            //var IdMax = _dbcontext.Establishment.MaxBy(e => e.Id);
+            var test = _dbcontext.Establishment.OrderByDescending(e=>e.Id).FirstOrDefault();
+            
+
+            Establishment establishment = new Establishment();
+            //establishment.Id = test.Id +1;
+            establishment.Name = establishmentAux.Name;
+            establishment.Address = establishmentAux.Address;
+            establishment.Email = establishmentAux.Email;
+            establishment.City = establishmentAux.City;
+            establishment.Password = establishmentAux.Password;
+            establishment.TypeEstablishment = establishmentAux.TypeEstablishment;
+            establishment.Phone = "911111111";
+
             _dbcontext.Establishment.Add(establishment);
+            _dbcontext.SaveChanges();
 
             return CreatedAtAction(nameof(GetUser), new { id = establishment.Id }, establishment);
         }

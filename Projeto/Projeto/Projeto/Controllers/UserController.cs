@@ -36,7 +36,7 @@ namespace Projeto.Controllers
                 user.Password = hashPass.HashPassword(user, user.Password);
 
                 //Verificar se o username do utilizador é único
-                var username = _context.Users
+                var username = _context.User
                                 .Where(a => a.Username == user.Username)
                                 .FirstOrDefault();
 
@@ -72,14 +72,14 @@ namespace Projeto.Controllers
                 return NotFound();
             }
 
-            var users = await _context.Users
+            var criadores = await _context.User
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (users == null)
+            if (criadores == null)
             {
                 return NotFound();
             }
 
-            return View(users);
+            return View(criadores);
         }
 
         [HttpPost, ActionName("Delete")]
@@ -99,70 +99,5 @@ namespace Projeto.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.Users == null)
-            {
-                return NotFound();
-            }
-
-            var user = await _context.Users
-                                  .Where(a => a.Id == id)
-                                  .FirstOrDefaultAsync();
-
-
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return View(user);
-        }
-
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Username,Email,Password")] User user)
-        {
-            if (id != user.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    //Transform the password to a hash password 
-                    var hashPass = new PasswordHasher<User>();
-                    user.Password = hashPass.HashPassword(user, user.Password);
-
-                    _context.Update(user);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserExists(user.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-
-            return View(user);
-        }
-
-        private bool UserExists(int id)
-        {
-            return _context.Comment.Any(e => e.Id == id);
-        }
-
-
     }
 }

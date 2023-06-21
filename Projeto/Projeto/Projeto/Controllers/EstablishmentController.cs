@@ -18,7 +18,7 @@ namespace Projeto.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Establishment.ToListAsync());
+            return View(await _context.Establishment.ToListAsync()!);
         }
 
         public IActionResult Create()

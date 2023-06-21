@@ -172,5 +172,69 @@ namespace Projeto.Controllers
 
             return View(establishment);
         }
+
+        
+        public async Task<IActionResult> PasswordReset(int? id)
+        {
+            if (id == null || _context.Establishment == null)
+            {
+                return NotFound();
+            }
+
+            var establishment = await _context.Establishment
+                                  .Where(a => a.Id == id)
+                                  .FirstOrDefaultAsync();
+
+
+            if (establishment == null)
+            {
+                return NotFound();
+            }
+
+            return View(establishment);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> PasswordReset(int id, [Bind("Id, Email, Password, Name, City, Address, Phone, TypeEstablishment")] Establishment establishment)
+        {
+            if (id != establishment.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    //Transform the password to a hash password 
+                    var hashPass = new PasswordHasher<Establishment>();
+                    establishment.Password = hashPass.HashPassword(establishment, establishment.Password);
+
+                    _context.Update(establishment);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!EstablishmentExists(establishment.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(establishment);
+        }
+
+        private bool EstablishmentExists(int id)
+        {
+            return _context.Comment.Any(e => e.Id == id);
+        }
     }
 }

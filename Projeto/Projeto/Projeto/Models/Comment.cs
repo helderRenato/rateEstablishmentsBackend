@@ -18,6 +18,10 @@ namespace Projeto.Models
         [RegularExpression("^.{20,}$", ErrorMessage = "O comentário deve ter pelo menos 20 caractéres")]
         public string Text { get; set; }
 
+        [StringLength(50)]
+        [RegularExpression("^.{20,}$", ErrorMessage = "O comentário deve ter pelo menos 20 caractéres")]
+        public string? Response { get; set; }
+
         /// <summary>
         /// Caso o comentário for denunciado
         /// </summary>

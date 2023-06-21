@@ -5,22 +5,45 @@
 }
 
 <h1>Detalhes do @Model.Name</h1>
-
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 <div>
    <hr />
+   <dl class="row">
+      <dt class="col-sm-2">
+         @Html.DisplayNameFor(model => model.Email)
+      </dt>
+      <dd class="col-sm-10">
+         @Html.DisplayFor(model => model.Email)
+      </dd>
+
+      <dt class="col-sm-2">
+         @Html.DisplayNameFor(model => model.Password)
+      </dt>
+      <dd class="col-sm-10">
+         @Html.DisplayFor(model => model.Password)
+      </dd>
+   </dl>
    <h4>Fotografias do @Model.Name</h4>
 
    @foreach (var foto in Model.ListPhotos) {
+       <hr />
       <p>
          <img src="~/Photos/User/@foto.Name"
               alt="fotografia do @Model.Name"
               width="100px" />
+
       </p>
+      if(Model.ListPhotos.Count > 1){
+          <div>
+           <a asp-action="DeletePhoto" asp-route-id="@foto.Id" asp-route-idEstablishment="@Model.Id">Apagar Foto</a> 
+        </div>
+      }
    }
 
 
 </div>
 <div>
    <a asp-action="Edit" asp-route-id="@Model?.Id">Editar</a> |
+   <a asp-action="AddPhoto" asp-route-id="@Model?.Id">Adicionar Fotografia</a> |
    <a asp-action="Index">Regressar</a>
 </div>

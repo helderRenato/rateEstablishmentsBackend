@@ -46,10 +46,18 @@ namespace Projeto.Controllers
                     //Caso tiver primeiro eliminamos o rating anterior 
                     var rating = await _context.Rating.FindAsync(ratingByUser.Id);
                     _context.Rating.Remove(rating);
+                    //e depois adicionamos
+                    _context.Add(establishmentRate);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
-                _context.Add(establishmentRate);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                else
+                {
+
+                    _context.Add(establishmentRate);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
             }
 
             return RedirectToAction(nameof(Index));

@@ -222,5 +222,123 @@ namespace Projeto.Controllers
 
             return View(comment);
         }
+
+        //O estabelecimento pode responder ao comentário 
+        public async Task<IActionResult> Answer(int? id)
+        {
+            if (id == null || _context.Comment == null)
+            {
+                return NotFound();
+            }
+
+            var comment = await _context.Comment
+                                  .Where(a => a.Id == id)
+                                  .FirstOrDefaultAsync();
+
+
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            ViewData["Users"] = new SelectList(_context.Users, "Id", "Username", comment.UserFK);
+            ViewData["Establishments"] = new SelectList(_context.Establishment, "Id", "Name", comment.EstablishmentFK);
+            return View(comment);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Answer(int id, [Bind("Id,Text,Response,UserFK,EstablishmentFK")] Comment comment)
+        {
+            if (id != comment.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(comment);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!CommentExists(comment.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["Users"] = new SelectList(_context.Users, "Id", "Username", comment.UserFK);
+            ViewData["Establishments"] = new SelectList(_context.Establishment, "Id", "Name", comment.EstablishmentFK);
+            return View(comment);
+        }
+
+        //Apagar a resposta 
+        public async Task<IActionResult> DeleteAnswer(int? id)
+        {
+            if (id == null || _context.Comment == null)
+            {
+                return NotFound();
+            }
+
+            var comment = await _context.Comment
+                                  .Where(a => a.Id == id)
+                                  .FirstOrDefaultAsync();
+
+
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            ViewData["Users"] = new SelectList(_context.Users, "Id", "Username", comment.UserFK);
+            ViewData["Establishments"] = new SelectList(_context.Establishment, "Id", "Name", comment.EstablishmentFK);
+            return View(comment);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteAnswer(int id, [Bind("Id,Text,Response,UserFK,EstablishmentFK")] Comment comment)
+        {
+            if (id != comment.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    comment.Response = null; 
+                    _context.Update(comment);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!CommentExists(comment.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["Users"] = new SelectList(_context.Users, "Id", "Username", comment.UserFK);
+            ViewData["Establishments"] = new SelectList(_context.Establishment, "Id", "Name", comment.EstablishmentFK);
+            return View(comment);
+        }
+
+
     }
 }

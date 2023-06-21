@@ -252,7 +252,7 @@ namespace Projeto.Migrations
 
                     b.HasIndex("UserFK");
 
-                    b.ToTable("Comment");
+                    b.ToTable("Comment", (string)null);
                 });
 
             modelBuilder.Entity("Projeto.Models.Establishment", b =>
@@ -297,7 +297,7 @@ namespace Projeto.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Establishment");
+                    b.ToTable("Establishment", (string)null);
                 });
 
             modelBuilder.Entity("Projeto.Models.Photo", b =>
@@ -322,7 +322,7 @@ namespace Projeto.Migrations
 
                     b.HasIndex("EstablishmentFK");
 
-                    b.ToTable("Photo");
+                    b.ToTable("Photo", (string)null);
                 });
 
             modelBuilder.Entity("Projeto.Models.Rating", b =>
@@ -348,7 +348,7 @@ namespace Projeto.Migrations
 
                     b.HasIndex("UserFK");
 
-                    b.ToTable("Rating");
+                    b.ToTable("Rating", (string)null);
                 });
 
             modelBuilder.Entity("Projeto.Models.User", b =>
@@ -375,7 +375,7 @@ namespace Projeto.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

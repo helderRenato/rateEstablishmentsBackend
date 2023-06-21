@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Projeto.Models
@@ -20,14 +21,15 @@ namespace Projeto.Models
         /// <summary>
         /// Caso o comentário for denunciado
         /// </summary>
+        [DefaultValue(false)]
         public Boolean Denounced {get; set;}
 
         [ForeignKey(nameof(User))]
         public int UserFK { get; set; }
-        public User User { get; set; }
+        public User? User { get; set; }
 
         [ForeignKey(nameof(Establishment))]
         public int EstablishmentFK { get; set; }
-        public Establishment Establishment { get; set; }
+        public Establishment? Establishment { get; set; }
     }
 }

@@ -99,5 +99,70 @@ namespace Projeto.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null || _context.Users == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _context.Users
+                                  .Where(a => a.Id == id)
+                                  .FirstOrDefaultAsync();
+
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return View(user);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Username,Email,Password")] User user)
+        {
+            if (id != user.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    //Transform the password to a hash password 
+                    var hashPass = new PasswordHasher<User>();
+                    user.Password = hashPass.HashPassword(user, user.Password);
+
+                    _context.Update(user);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!UserExists(user.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(user);
+        }
+
+        private bool UserExists(int id)
+        {
+            return _context.Comment.Any(e => e.Id == id);
+        }
+
+
     }
 }

@@ -31,6 +31,7 @@ namespace Projeto.Controllers
         public async Task<IActionResult> Create([Bind("Id, Email, Password, Name, City, Address, Phone, TypeEstablishment")] Establishment establishment, IFormFile foto)
         {
             //Avaliar a fotografia
+
             //Será que o utilizador submeteu a fotografia
             string nomeFoto = ""; 
             //Caso sim vamos validar se é mesmo uma imagem
@@ -51,7 +52,22 @@ namespace Projeto.Controllers
                     nomeFoto = g.ToString();
                     string extensao = Path.GetExtension(foto.FileName).ToLower();
                     nomeFoto += extensao;
+
+                    //Associar a imagem ao estabelecimento na base de dados
+                    Photo photo = new Photo
+                    {
+                        Date = DateTime.Now,
+                        Name = nomeFoto
+                    };
+
+                    //adicionar a lista 
+                    establishment.ListPhotos.Add(photo);
                 }
+            }
+            else
+            {
+                ModelState.AddModelError("", "Por favor selecione uma imagem");
+                return View();
             }
 
 
@@ -73,6 +89,10 @@ namespace Projeto.Controllers
                     return View(establishment);
                 }
 
+                //Salvar na base de dados os dados do estabelecimento
+                _context.Add(establishment);
+                await _context.SaveChangesAsync();
+
                 //Guardar a imagem em disco 
                 if (foto != null)
                 {
@@ -89,21 +109,68 @@ namespace Projeto.Controllers
                     using var stream = new FileStream(novaLocalizacao, FileMode.Create);
                     await foto.CopyToAsync(stream);
 
-                    //Associar a imagem ao estabelecimento na base de dados
-                    establishment.ListPhoto
-                           .Add(new Photo
-                           {
-                               Date = DateTime.Now,
-                               Name = nomeFoto,
-                           });
+                    
                 }
 
-                _context.Add(establishment);
-                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
             return View();
+        }
+
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null || _context.Establishment == null)
+            {
+                return NotFound();
+            }
+
+            var establishment = await _context.Establishment
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (establishment == null)
+            {
+                return NotFound();
+            }
+
+            return View(establishment);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            if (_context.Users == null)
+            {
+                return Problem("Entity set 'ApplicationDbContext.Establishment'  is null.");
+            }
+            var establishment = await _context.Establishment.FindAsync(id);
+            if (establishment != null)
+            {
+                _context.Establishment.Remove(establishment);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Details(int? id)
+        {
+
+            if (id == null || _context.Establishment == null)
+            {
+                return NotFound();
+            }
+
+            var establishment = await _context.Establishment
+                                   .Include(a => a.ListPhotos)
+                                   .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (establishment == null)
+            {
+                return NotFound();
+            }
+
+            return View(establishment);
         }
     }
 }

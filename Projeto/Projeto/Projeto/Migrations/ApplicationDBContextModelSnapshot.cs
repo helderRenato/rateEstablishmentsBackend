@@ -238,44 +238,21 @@ namespace Projeto.Migrations
                     b.Property<int>("EstablishmentFK")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsAnswer")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Text")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("UserFK")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("EstablishmentFK");
 
-                    b.ToTable("Comment");
-                });
-
-            modelBuilder.Entity("Projeto.Models.CommentRate", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
-
-                    b.Property<int>("CommentFK")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Likes")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserFK")
-                        .HasColumnType("int");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("CommentFK");
-
                     b.HasIndex("UserFK");
 
-                    b.ToTable("CommentRate");
+                    b.ToTable("Comment", (string)null);
                 });
 
             modelBuilder.Entity("Projeto.Models.Establishment", b =>
@@ -320,33 +297,7 @@ namespace Projeto.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Establishment");
-                });
-
-            modelBuilder.Entity("Projeto.Models.EstablishmentRate", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("EstablishmentFK")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Stars")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserFK")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EstablishmentFK");
-
-                    b.HasIndex("UserFK");
-
-                    b.ToTable("EstablishmentsRate");
+                    b.ToTable("Establishment", (string)null);
                 });
 
             modelBuilder.Entity("Projeto.Models.Photo", b =>
@@ -371,7 +322,33 @@ namespace Projeto.Migrations
 
                     b.HasIndex("EstablishmentFK");
 
-                    b.ToTable("Photo");
+                    b.ToTable("Photo", (string)null);
+                });
+
+            modelBuilder.Entity("Projeto.Models.Rating", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("EstablishmentFK")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Stars")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserFK")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EstablishmentFK");
+
+                    b.HasIndex("UserFK");
+
+                    b.ToTable("Rating", (string)null);
                 });
 
             modelBuilder.Entity("Projeto.Models.User", b =>
@@ -398,7 +375,7 @@ namespace Projeto.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -455,43 +432,13 @@ namespace Projeto.Migrations
             modelBuilder.Entity("Projeto.Models.Comment", b =>
                 {
                     b.HasOne("Projeto.Models.Establishment", "Establishment")
-                        .WithMany("ListComment")
-                        .HasForeignKey("EstablishmentFK")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Establishment");
-                });
-
-            modelBuilder.Entity("Projeto.Models.CommentRate", b =>
-                {
-                    b.HasOne("Projeto.Models.Comment", "Comment")
-                        .WithMany("ListCommentRate")
-                        .HasForeignKey("CommentFK")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Projeto.Models.User", "User")
-                        .WithMany("ListCommentRate")
-                        .HasForeignKey("UserFK")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Comment");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Projeto.Models.EstablishmentRate", b =>
-                {
-                    b.HasOne("Projeto.Models.Establishment", "Establishment")
-                        .WithMany("ListEstablishmentRate")
+                        .WithMany("ListComments")
                         .HasForeignKey("EstablishmentFK")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Projeto.Models.User", "User")
-                        .WithMany("ListEstablishmentRate")
+                        .WithMany("ListComments")
                         .HasForeignKey("UserFK")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -504,7 +451,7 @@ namespace Projeto.Migrations
             modelBuilder.Entity("Projeto.Models.Photo", b =>
                 {
                     b.HasOne("Projeto.Models.Establishment", "Establishment")
-                        .WithMany("ListPhoto")
+                        .WithMany("ListPhotos")
                         .HasForeignKey("EstablishmentFK")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -512,25 +459,39 @@ namespace Projeto.Migrations
                     b.Navigation("Establishment");
                 });
 
-            modelBuilder.Entity("Projeto.Models.Comment", b =>
+            modelBuilder.Entity("Projeto.Models.Rating", b =>
                 {
-                    b.Navigation("ListCommentRate");
+                    b.HasOne("Projeto.Models.Establishment", "Establishment")
+                        .WithMany("ListRatings")
+                        .HasForeignKey("EstablishmentFK")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Projeto.Models.User", "User")
+                        .WithMany("ListRatings")
+                        .HasForeignKey("UserFK")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Establishment");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Projeto.Models.Establishment", b =>
                 {
-                    b.Navigation("ListComment");
+                    b.Navigation("ListComments");
 
-                    b.Navigation("ListEstablishmentRate");
+                    b.Navigation("ListPhotos");
 
-                    b.Navigation("ListPhoto");
+                    b.Navigation("ListRatings");
                 });
 
             modelBuilder.Entity("Projeto.Models.User", b =>
                 {
-                    b.Navigation("ListCommentRate");
+                    b.Navigation("ListComments");
 
-                    b.Navigation("ListEstablishmentRate");
+                    b.Navigation("ListRatings");
                 });
 #pragma warning restore 612, 618
         }

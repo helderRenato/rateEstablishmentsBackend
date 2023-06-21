@@ -19,8 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\RateEstablishment\" />
     <Folder Include="wwwroot\images\" />
+    <Folder Include="wwwroot\Photos\" />
   </ItemGroup>
 
 </Project>

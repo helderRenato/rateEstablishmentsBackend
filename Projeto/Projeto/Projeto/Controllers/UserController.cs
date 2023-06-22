@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Projeto.Areas.Identity.Data;
-using Projeto.Models; 
+using Projeto.Models;
 
 namespace Projeto.Controllers
 {
@@ -67,19 +67,20 @@ namespace Projeto.Controllers
 
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Users == null)
+            if (id == null || _context.User == null)
             {
                 return NotFound();
             }
 
             var users = await _context.User
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (criadores == null)
+
+            if (users == null)
             {
                 return NotFound();
             }
 
-            return View(criadores);
+            return View(users);
         }
 
         [HttpPost, ActionName("Delete")]

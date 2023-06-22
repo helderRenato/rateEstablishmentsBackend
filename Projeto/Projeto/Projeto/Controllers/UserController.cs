@@ -17,7 +17,7 @@ namespace Projeto.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Users.ToListAsync());
+            return View(await _context.User.ToListAsync());
         }
 
         public IActionResult Create()
@@ -47,7 +47,7 @@ namespace Projeto.Controllers
                 }
 
                 //Verificar se o email é único
-                var email = _context.Users
+                var email = _context.User
                                 .Where(a => a.Email == user.Email)
                                 .FirstOrDefault();
 
@@ -87,14 +87,14 @@ namespace Projeto.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Users == null)
+            if (_context.User == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.Users'  is null.");
             }
-            var criadores = await _context.Users.FindAsync(id);
-            if (criadores != null)
+            var user = await _context.User.FindAsync(id);
+            if (user != null)
             {
-                _context.Users.Remove(criadores);
+                _context.User.Remove(user);
             }
 
             await _context.SaveChangesAsync();

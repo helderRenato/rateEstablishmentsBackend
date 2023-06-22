@@ -1,20 +1,24 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace Projeto.Models
 {
-    public class LoginModel
+    public class UserTransportModel
     {
         /// <summary>
-        /// Email do Estabelecimento
+        /// Username do Utilizador 
         /// </summary>
+        public string Username { get; set; }
+
+        /// <summary>
+        /// Email do Utilizador
+        /// </summary>
+
+        [StringLength(40)]
         public string Email { get; set; }
 
 
         /// <summary>
-        /// Password do Estabelecimento 
+        /// Password do Utilizador
         /// </summary>
         public string Password { get; set; }
-
     }
 }

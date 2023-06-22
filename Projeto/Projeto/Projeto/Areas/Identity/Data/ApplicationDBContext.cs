@@ -24,6 +24,6 @@ public class ApplicationDBContext : IdentityDbContext<IdentityUser>
     public DbSet<Rating> Rating { get; set; }
     public DbSet<Comment> Comment { get; set; }
     public DbSet<Photo> Photo { get; set; }
-    public DbSet<User> User { get; set; }
+    public DbSet<User> Users { get; set; }
 
 }

@@ -30,7 +30,7 @@ namespace Projeto.Controllers.API
             //Verificar se o utilizador existe na base de dados
 
             //Verificar o email
-            var utilizador = await _context.User.SingleOrDefaultAsync(u => u.Email == login.Email);
+            var utilizador = await _context.Users.SingleOrDefaultAsync(u => u.Email == login.Email);
             if (utilizador == null)
             {
                 return BadRequest("Credenciais Inválidas");
@@ -64,7 +64,7 @@ namespace Projeto.Controllers.API
             user.Password = hashPass.HashPassword(user, user.Password);
 
             //Verificar se o username do utilizador é único
-            var username = _context.User
+            var username = _context.Users
                                 .Where(a => a.Username == user.Username)
                                 .FirstOrDefault();
 
@@ -76,7 +76,7 @@ namespace Projeto.Controllers.API
                 
            
            //Verificar se o email é único
-            var email = _context.User
+            var email = _context.Users
                                 .Where(a => a.Email == user.Email)
                                 .FirstOrDefault();
 
@@ -95,7 +95,7 @@ namespace Projeto.Controllers.API
         public async Task<ActionResult> ResetPass(int id, [FromBody] PasswordResetModel passwordReset)
         {
             //Buscar o utilizador pelo Id 
-            var user = _context.User
+            var user = _context.Users
                         .FirstOrDefault(a => a.Id == id);
 
             if(user == null)
@@ -134,7 +134,7 @@ namespace Projeto.Controllers.API
 
         private bool UserExists(int id)
         {
-            return _context.User.Any(e => e.Id == id);
+            return _context.Users.Any(e => e.Id == id);
         }
     }
 }

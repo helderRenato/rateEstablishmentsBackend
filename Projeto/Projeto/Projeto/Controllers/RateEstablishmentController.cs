@@ -17,12 +17,12 @@ namespace Projeto.Controllers
         }
         public async Task<IActionResult> IndexAsync()
         {
-            return View(await _context.EstablishmentsRate.ToListAsync());
+            return View(await _context.Rating.ToListAsync());
         }
 
         public async Task<IActionResult> CreateAsync()
         {
-            ViewData["Users"] = await _context.User.ToListAsync();
+            ViewData["Users"] = await _context.Users.ToListAsync();
             ViewData["Establishments"] = await _context.Establishment.ToListAsync();
 
             return View();
@@ -30,12 +30,12 @@ namespace Projeto.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id, UserFK, EstablishmentFK, Stars, Comment")] EstablishmentRate establishmentRate)
+        public async Task<IActionResult> Create([Bind("Id, UserFK, EstablishmentFK, Stars, Comment")] Rating establishmentRate)
         {
-            ViewData["Users"] = await _context.User.ToListAsync();
+            ViewData["Users"] = await _context.Users.ToListAsync();
             ViewData["Establishments"] = await _context.Establishment.ToListAsync();
 
-            establishmentRate.User = _context.User
+            establishmentRate.User = _context.Users
                 .Where(a => a.Id == establishmentRate.UserFK)
                 .FirstOrDefault();
 

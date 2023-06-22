@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Projeto.Areas.Identity.Data;
 using Projeto.Models;
@@ -22,8 +23,8 @@ namespace Projeto.Controllers
 
         public async Task<IActionResult> CreateAsync()
         {
-            ViewData["Users"] = await _context.Users.ToListAsync();
-            ViewData["Establishments"] = await _context.Establishment.ToListAsync();
+            ViewData["Users"] = new SelectList(_context.Users, "Id", "Username");
+            ViewData["Establishments"] = new SelectList(_context.Establishment, "Id", "Name");
 
             return View();
         }
@@ -32,26 +33,93 @@ namespace Projeto.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id, UserFK, EstablishmentFK, Stars, Comment")] Rating establishmentRate)
         {
-            ViewData["Users"] = await _context.Users.ToListAsync();
-            ViewData["Establishments"] = await _context.Establishment.ToListAsync();
+            ViewData["Users"] = new SelectList(_context.Users, "Id", "Username");
+            ViewData["Establishments"] = new SelectList(_context.Establishment, "Id", "Name");
 
-            establishmentRate.User = _context.Users
-                .Where(a => a.Id == establishmentRate.UserFK)
-                .FirstOrDefault();
-
-
-            establishmentRate.Establishment = _context.Establishment
-                .Where(a => a.Id == establishmentRate.EstablishmentFK)
-                .FirstOrDefault();
-
+            var rating = _context.Rating
+                .Where(r => r.UserFK == establishmentRate.UserFK)
+                .FirstOrDefault(); 
+                
             if (ModelState.IsValid)
             {
-                _context.Add(establishmentRate);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                //Caso o utilizador possua algum rating podemos simplesmente atualizar
+
+                if (rating != null)
+                {
+                    rating.Stars = establishmentRate.Stars; 
+                    _context.Update(rating);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+
+                }
+                else
+                {
+                    _context.Add(establishmentRate);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
             }
 
             return View();
         }
+
+        public async Task<IActionResult> Details(int? id)
+        {
+
+            if (id == null || _context.Rating == null)
+            {
+                return NotFound();
+            }
+
+            var rating = await _context.Rating
+                                   .Include(a => a.User)
+                                   .Include(a => a.Establishment)
+                                   .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (rating == null)
+            {
+                return NotFound();
+            }
+
+            return View(rating);
+        }
+
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null || _context.Rating == null)
+            {
+                return NotFound();
+            }
+
+            var rating = await _context.Rating
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (rating == null)
+            {
+                return NotFound();
+            }
+
+            return View(rating);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            if (_context.Rating == null)
+            {
+                return Problem("Entity set 'ApplicationDbContext.Rating'  is null.");
+            }
+            var rating = await _context.Rating.FindAsync(id);
+
+            if (rating != null)
+            {
+                _context.Rating.Remove(rating);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }

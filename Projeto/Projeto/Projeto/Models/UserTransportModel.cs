@@ -1,8 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+
 namespace Projeto.Models
 {
     public class UserTransportModel
     {
+
+
         /// <summary>
         /// Username do Utilizador 
         /// </summary>
@@ -11,7 +14,6 @@ namespace Projeto.Models
         /// <summary>
         /// Email do Utilizador
         /// </summary>
-
         [StringLength(40)]
         public string Email { get; set; }
 

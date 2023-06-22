@@ -36,10 +36,12 @@ namespace Projeto.Models
 
         public string Address { get; set; }
 
+
         /// <summary>
         /// Numero do estabelecimento
         /// </summary>
         public string Phone { get; set; }
+
 
         public IFormFile File { get; set; }
 
@@ -49,7 +51,7 @@ namespace Projeto.Models
         public Establishment.establishmentType TypeEstablishment { get; set; }
 
 
-
     }
 
 }
+

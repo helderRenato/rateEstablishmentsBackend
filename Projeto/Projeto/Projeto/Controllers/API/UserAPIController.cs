@@ -52,88 +52,89 @@ namespace Projeto.Controllers.API
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult> Register([FromBody] User user)
+        public async Task<ActionResult> Register([FromBody] UserTransportModel userAux)
         {
-            if (ModelState.IsValid)
-            {
-                //Transform the password to a hash password 
-                var hashPass = new PasswordHasher<User>();
-                user.Password = hashPass.HashPassword(user, user.Password);
+            var user = new User(); 
+            user.Email = userAux.Email;
+            user.Password = userAux.Password;
+            user.Username = userAux.Username;
 
-                //Verificar se o username do utilizador é único
-                var username = _context.Users
+            //Transform the password to a hash password 
+            var hashPass = new PasswordHasher<User>();
+            user.Password = hashPass.HashPassword(user, user.Password);
+
+            //Verificar se o username do utilizador é único
+            var username = _context.Users
                                 .Where(a => a.Username == user.Username)
                                 .FirstOrDefault();
 
-                if (username != null)
-                {
-                    return BadRequest("O username já existe, por favor introduza um diferente.");
-                }
+           if (username != null)
+           {
+               return BadRequest("O username já existe, por favor introduza um diferente.");
+           }
 
-                //Verificar se o email é único
-                var email = _context.Users
+                
+           
+           //Verificar se o email é único
+            var email = _context.Users
                                 .Where(a => a.Email == user.Email)
                                 .FirstOrDefault();
 
-                if (email != null)
-                {
-                    return BadRequest("Já existe uma conta com este email");
-                }
+           if (email != null)
+           {
+                return BadRequest("Já existe uma conta com este email");
+           }
 
-                _context.Add(user);
-                await _context.SaveChangesAsync();
-
-                return Ok(user);
-            }
-
-            return BadRequest();
+           _context.Add(user);
+           await _context.SaveChangesAsync();
+           return Ok(user);
         }
 
         //Caso o utilizador esqueca-se da password devemos ter uma rota capaz de fazer o reset a password 
         [HttpPost("resetpass/{id}")]
         public async Task<ActionResult> ResetPass(int id, [FromBody] PasswordResetModel passwordReset)
         {
-            if (ModelState.IsValid)
+            //Buscar o utilizador pelo Id 
+            var user = _context.Users
+                        .FirstOrDefault(a => a.Id == id);
+
+            if(user == null)
             {
-                //Buscar o utilizador pelo Id 
-                var user = _context.Users
-                            .FirstOrDefault(a => a.Id == id);
-
-                //Verificar se a password e o confirmar password são iguais
-                if (passwordReset.Password != passwordReset.ConfirmarPassword)
-                {
-                    return BadRequest("Passwords diferentes por favor insira novamente."); 
-                }
-
-                try
-                {
-                    //Transform the password to a hash password 
-                    var hashPass = new PasswordHasher<User>();
-                    user.Password = hashPass.HashPassword(user, user.Password);
-
-                    _context.Update(user);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserExists(user.Id))
-                    {
-                        return BadRequest();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return Ok(user);
+                return BadRequest("Utilizador Inexistente");
+            }
+            //Verificar se a password e o confirmar password são iguais
+            if (passwordReset.Password != passwordReset.ConfirmarPassword)
+            {
+                return BadRequest("Passwords diferentes por favor insira novamente."); 
             }
 
-            return BadRequest();
+            try
+            {
+                //Transform the password to a hash password 
+                var hashPass = new PasswordHasher<User>();
+                user.Password = hashPass.HashPassword(user, passwordReset.Password);
+
+                _context.Update(user);
+                await _context.SaveChangesAsync();
+                }
+            catch (DbUpdateConcurrencyException)
+            {
+            
+                if (!UserExists(user.Id))
+                {
+                    return BadRequest();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return Ok(user);
         }
 
         private bool UserExists(int id)
         {
-            return _context.Comment.Any(e => e.Id == id);
+            return _context.Users.Any(e => e.Id == id);
         }
     }
 }

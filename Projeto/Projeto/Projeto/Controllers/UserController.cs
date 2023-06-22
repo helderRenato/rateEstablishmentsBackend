@@ -74,12 +74,12 @@ namespace Projeto.Controllers
 
             var users = await _context.User
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (users == null)
+            if (criadores == null)
             {
                 return NotFound();
             }
 
-            return View(users);
+            return View(criadores);
         }
 
         [HttpPost, ActionName("Delete")]
@@ -102,7 +102,7 @@ namespace Projeto.Controllers
 
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Users == null)
+            if (id == null || _context.User == null)
             {
                 return NotFound();
             }

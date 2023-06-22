@@ -36,7 +36,7 @@ namespace Projeto.Controllers
                 user.Password = hashPass.HashPassword(user, user.Password);
 
                 //Verificar se o username do utilizador é único
-                var username = _context.Users
+                var username = _context.User
                                 .Where(a => a.Username == user.Username)
                                 .FirstOrDefault();
 
@@ -72,7 +72,7 @@ namespace Projeto.Controllers
                 return NotFound();
             }
 
-            var users = await _context.Users
+            var users = await _context.User
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (users == null)
             {
@@ -107,7 +107,7 @@ namespace Projeto.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Users
+            var user = await _context.User
                                   .Where(a => a.Id == id)
                                   .FirstOrDefaultAsync();
 

@@ -199,5 +199,51 @@ namespace Projeto.Controllers.API
 
         }
 
+        //Filtrar os estabelecimentos pelo Nome e o/u o tipo de estabelecimento (Restaurante, Café, Bar, Hotel) e Cidade
+        [HttpGet("getFiltered")]
+        public async Task<ActionResult> GetFiltered([FromBody] FilterEstablishmentModel establishmentAux)
+        {
+            //Verificar se a request veio apenas com o nome ou o tipo de estabelecimento , cidade ou os tres juntos 
+            if( (establishmentAux.Name == null) && (establishmentAux.TypeEstablishment != null) && (establishmentAux.City == null))
+            {
+               //Significa que vamos buscar os estabelicementos apenas pelo tipo
+               var establishments = _context.Establishment.Where(wf => wf.TypeEstablishment == establishmentAux.TypeEstablishment).ToList();
+                return Ok(establishments); 
+            }else if( (establishmentAux.Name != null) && (establishmentAux.TypeEstablishment == null) && (establishmentAux.City == null))
+            {
+                //Significa que vamos buscar apenas pelo nome
+                var establishments = _context.Establishment.Where(wf => wf.Name.Contains(establishmentAux.Name)).ToList();
+                return Ok(establishments);
+            }else if ((establishmentAux.Name == null) && (establishmentAux.TypeEstablishment == null) && (establishmentAux.City != null))
+            {
+                //Significa que vamos buscar apenas pela cidade 
+                var establishments = _context.Establishment.Where(wf => wf.City == establishmentAux.City).ToList();
+                return Ok(establishments);
+            }else if ((establishmentAux.Name != null) && (establishmentAux.TypeEstablishment == null) && (establishmentAux.City != null))
+            {
+                //Significa que vamos buscar pela cidade e o nome
+                var establishments = _context.Establishment.Where(wf => wf.City == establishmentAux.City && wf.Name.Contains(establishmentAux.Name)).ToList();
+                return Ok(establishments);
+            }
+            else if ((establishmentAux.Name != null) && (establishmentAux.TypeEstablishment != null) && (establishmentAux.City == null))
+            {
+                //Pelo nome e o tipo 
+                var establishments = _context.Establishment.Where(wf => wf.TypeEstablishment == establishmentAux.TypeEstablishment && wf.Name.Contains(establishmentAux.Name)).ToList();
+                return Ok(establishments);
+            }
+            else if ((establishmentAux.Name == null) && (establishmentAux.TypeEstablishment != null) && (establishmentAux.City != null))
+            {
+                //Pela cidade e pelo tipo
+                var establishments = _context.Establishment.Where(wf => wf.TypeEstablishment == establishmentAux.TypeEstablishment && wf.City == establishmentAux.City).ToList();
+                return Ok(establishments);
+            }
+            else
+            {
+                //Significa que vamos buscar pelos 3 parametros
+                var establishments = _context.Establishment.Where(wf => wf.Name.Contains(establishmentAux.Name) && wf.TypeEstablishment == establishmentAux.TypeEstablishment && wf.City == establishmentAux.City).ToList();
+                return Ok(establishments); 
+            }
+        }
+
     }
 }

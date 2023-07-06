@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,37 +13,36 @@ namespace Projeto.Controllers.API
     [ApiController]
     public class RatingAPIController : Controller
     {
-
         private readonly ApplicationDBContext _context;
-        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public RatingAPIController(ApplicationDBContext context, IWebHostEnvironment webHostEnvironment)
+        public RatingAPIController(ApplicationDBContext context)
         {
             _context = context;
-            _webHostEnvironment = webHostEnvironment;
         }
 
-        [HttpPost("Avaliar")]
-        public async Task<ActionResult> Avaliar([FromForm] RatingTransportModel ratingAux)
+       [HttpPost("rating/{id}")]
+        public async Task<ActionResult> Create(int id, [FromBody] RatingTransportModel ratingAux)
         {
+            //Criar o comentário e o rating
+            var comment = new Comment();
             var rating = new Rating();
 
+            comment.Text = ratingAux.Text; 
+            comment.UserFK = ratingAux.UserFK;
+            comment.EstablishmentFK = id;
+
+            //Salvar o comentário
+            _context.Add(comment);
+            await _context.SaveChangesAsync();
+
             rating.Stars = ratingAux.Stars;
-            rating.Establishment = ratingAux.Establishment;
-            rating.User = ratingAux.User;
-
-            var user = rating.User;
-            var establishment = rating.Establishment;
-
-            user.ListRatings.Add(rating);
-            establishment.ListRatings.Add(rating);
-
+            rating.UserFK = ratingAux.UserFK; 
+            rating.EstablishmentFK = id;
 
             _context.Add(rating);
             await _context.SaveChangesAsync();
 
-            return Ok(rating);
-
+            return Ok("Avaliação criada com sucesso");
         }
     }
 }

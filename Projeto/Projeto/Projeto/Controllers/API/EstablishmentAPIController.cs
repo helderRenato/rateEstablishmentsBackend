@@ -6,6 +6,7 @@ using Projeto.Models;
 using Projeto.Areas.Identity.Data;
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Identity;
+using static Projeto.Models.Establishment;
 
 namespace Projeto.Controllers.API
 {
@@ -197,6 +198,19 @@ namespace Projeto.Controllers.API
                 return Ok("Estabelecimento atualizado"); 
             }
 
+        }
+
+
+        [HttpGet("get")]
+        public async Task<ActionResult> GetData(string name, string city, establishmentType type)
+        {
+            //var establishmentName = _context.Establishment.FirstOrDefault(e => e.Name == name);
+            //var establishmentAddress = _context.Establishment.FirstOrDefault(e => e.City == city);
+
+
+
+            return Ok(_context.Establishment.FirstOrDefault(e => e.Name == name && e.City == city && e.TypeEstablishment == type));
+            
         }
 
     }

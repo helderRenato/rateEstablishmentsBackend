@@ -6,6 +6,7 @@ using Projeto.Models;
 using Projeto.Areas.Identity.Data;
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Identity;
+using static Projeto.Models.Establishment;
 
 namespace Projeto.Controllers.API
 {
@@ -199,6 +200,20 @@ namespace Projeto.Controllers.API
 
         }
 
+
+        [HttpGet("get")]
+        public async Task<ActionResult> GetData(string name, string city, establishmentType type)
+        {
+            //var establishmentName = _context.Establishment.FirstOrDefault(e => e.Name == name);
+            //var establishmentAddress = _context.Establishment.FirstOrDefault(e => e.City == city);
+
+
+
+            return Ok(_context.Establishment.FirstOrDefault(e => e.Name == name && e.City == city && e.TypeEstablishment == type));
+        }
+
+
+
         //Filtrar os estabelecimentos pelo Nome e o/u o tipo de estabelecimento (Restaurante, Café, Bar, Hotel) e Cidade
         [HttpGet("getFiltered")]
         public async Task<ActionResult> GetFiltered([FromBody] FilterEstablishmentModel establishmentAux)
@@ -244,6 +259,6 @@ namespace Projeto.Controllers.API
                 return Ok(establishments); 
             }
         }
-
+        
     }
 }

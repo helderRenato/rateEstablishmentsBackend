@@ -211,7 +211,7 @@ namespace Projeto.Controllers.API
             var establishment = await _context.Establishment
                     .Include(e => e.ListPhotos)
                     .Include(e => e.ListComments)
-                    //.Include(e => e.ListRatings)
+                    .Include(e => e.ListRatings)
                     .FirstOrDefaultAsync(e => e.Id == id);
 
             return Ok(establishment);

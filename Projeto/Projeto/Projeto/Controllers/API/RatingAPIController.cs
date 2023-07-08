@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,26 +23,43 @@ namespace Projeto.Controllers.API
        [HttpPost("rating/{id}")]
         public async Task<ActionResult> Create(int id, [FromBody] RatingTransportModel ratingAux)
         {
-            //Criar o comentário e o rating
-            var comment = new Comment();
+            //Criar o rating
             var rating = new Rating();
-
-            comment.Text = ratingAux.Text; 
-            comment.UserFK = ratingAux.UserFK;
-            comment.EstablishmentFK = id;
-
-            //Salvar o comentário
-            _context.Add(comment);
-            await _context.SaveChangesAsync();
 
             rating.Stars = ratingAux.Stars;
             rating.UserFK = ratingAux.UserFK; 
             rating.EstablishmentFK = id;
 
-            _context.Add(rating);
-            await _context.SaveChangesAsync();
+            var rating2 = _context.Rating
+                    .Where(r => r.UserFK == rating.UserFK)
+                    .FirstOrDefault();
+
+            //Caso o utilizador possua algum rating podemos simplesmente atualizar
+            if (rating2 != null)
+            {
+                rating2.Stars = rating.Stars;
+                _context.Update(rating2);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                _context.Add(rating);
+                await _context.SaveChangesAsync();
+            }
 
             return Ok("Avaliação criada com sucesso");
         }
+
+        //Receber os Ratings feitos
+        [HttpGet("getRatings/{id}")]
+        public async Task<ActionResult> ReceberRatings(int id)
+        {
+            //Buscar os ratings na base de dados
+            var ratings = _context.Rating
+                .Where(r => r.EstablishmentFK == id); 
+
+            return Ok(ratings);
+        }
+
     }
 }

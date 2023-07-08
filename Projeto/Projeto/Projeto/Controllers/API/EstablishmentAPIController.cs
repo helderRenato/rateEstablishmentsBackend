@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -86,7 +86,6 @@ namespace Projeto.Controllers.API
             };
 
             //adicionar a lista 
-            establishment.ListPhotos = new List<Photo>();
             establishment.ListPhotos.Add(photo);
 
             var email = _context.Establishment
@@ -208,90 +207,213 @@ namespace Projeto.Controllers.API
             //var establishmentName = _context.Establishment.FirstOrDefault(e => e.Name == name);
             //var establishmentAddress = _context.Establishment.FirstOrDefault(e => e.City == city);
 
-            var establishment = await _context.Establishment
-                    .Include(e => e.ListPhotos)
-                    .FirstOrDefaultAsync(e => e.Name == name && e.City == city && e.TypeEstablishment == type);
 
-            return Ok(establishment);
+
+            return Ok(_context.Establishment.FirstOrDefault(e => e.Name == name && e.City == city && e.TypeEstablishment == type));
         }
 
 
 
         //Filtrar os estabelecimentos pelo Nome e o/u o tipo de estabelecimento (Restaurante, Café, Bar, Hotel) e Cidade
         [HttpGet("getFiltered")]
-        public async Task<ActionResult> GetFiltered([FromQuery] FilterEstablishmentModel establishmentAux)
+        public async Task<ActionResult> GetFiltered([FromBody] FilterEstablishmentModel establishmentAux)
         {
             //Verificar se a request veio apenas com o nome ou o tipo de estabelecimento , cidade ou os tres juntos 
             if ((establishmentAux.Name == null) && (establishmentAux.TypeEstablishment != null) && (establishmentAux.City == null))
             {
                 //Significa que vamos buscar os estabelicementos apenas pelo tipo
-                //var establishments = _context.Establishment.Where(wf => wf.TypeEstablishment == establishmentAux.TypeEstablishment).ToList();
-                var establishments = await _context.Establishment
-    .Include(e => e.ListPhotos)
-    .Where(wf => wf.TypeEstablishment == establishmentAux.TypeEstablishment)
-    .ToListAsync();
+                var establishments = _context.Establishment.Where(wf => wf.TypeEstablishment == establishmentAux.TypeEstablishment).ToList();
                 return Ok(establishments);
             }
             else if ((establishmentAux.Name != null) && (establishmentAux.TypeEstablishment == null) && (establishmentAux.City == null))
             {
                 //Significa que vamos buscar apenas pelo nome
-                //var establishments = _context.Establishment.Where(wf => wf.Name.Contains(establishmentAux.Name)).ToList();
-                var establishments = await _context.Establishment
-    .Include(e => e.ListPhotos)
-    .Where(wf => wf.Name.Contains(establishmentAux.Name))
-    .ToListAsync();
+                var establishments = _context.Establishment.Where(wf => wf.Name.Contains(establishmentAux.Name)).ToList();
                 return Ok(establishments);
             }
             else if ((establishmentAux.Name == null) && (establishmentAux.TypeEstablishment == null) && (establishmentAux.City != null))
             {
                 //Significa que vamos buscar apenas pela cidade 
-                //var establishments = _context.Establishment.Where(wf => wf.City == establishmentAux.City).ToList();
-                var establishments = await _context.Establishment
-    .Include(e => e.ListPhotos)
-    .Where((wf => wf.City == establishmentAux.City))
-    .ToListAsync();
+                var establishments = _context.Establishment.Where(wf => wf.City == establishmentAux.City).ToList();
                 return Ok(establishments);
             }
             else if ((establishmentAux.Name != null) && (establishmentAux.TypeEstablishment == null) && (establishmentAux.City != null))
             {
                 //Significa que vamos buscar pela cidade e o nome
-                //var establishments = _context.Establishment.Where(wf => wf.City == establishmentAux.City && wf.Name.Contains(establishmentAux.Name)).ToList();
-                var establishments = await _context.Establishment
-    .Include(e => e.ListPhotos)
-    .Where(wf => wf.City == establishmentAux.City && wf.Name.Contains(establishmentAux.Name))
-    .ToListAsync();
+                var establishments = _context.Establishment.Where(wf => wf.City == establishmentAux.City && wf.Name.Contains(establishmentAux.Name)).ToList();
                 return Ok(establishments);
             }
             else if ((establishmentAux.Name != null) && (establishmentAux.TypeEstablishment != null) && (establishmentAux.City == null))
             {
                 //Pelo nome e o tipo 
-                //var establishments = _context.Establishment.Where(wf => wf.TypeEstablishment == establishmentAux.TypeEstablishment && wf.Name.Contains(establishmentAux.Name)).ToList();
-                var establishments = await _context.Establishment
-    .Include(e => e.ListPhotos)
-    .Where(wf => wf.TypeEstablishment == establishmentAux.TypeEstablishment && wf.Name.Contains(establishmentAux.Name))
-    .ToListAsync();
+                var establishments = _context.Establishment.Where(wf => wf.TypeEstablishment == establishmentAux.TypeEstablishment && wf.Name.Contains(establishmentAux.Name)).ToList();
                 return Ok(establishments);
             }
             else if ((establishmentAux.Name == null) && (establishmentAux.TypeEstablishment != null) && (establishmentAux.City != null))
             {
                 //Pela cidade e pelo tipo
-                //var establishments = _context.Establishment.Where(wf => wf.TypeEstablishment == establishmentAux.TypeEstablishment && wf.City == establishmentAux.City).ToList();
-                var establishments = await _context.Establishment
-    .Include(e => e.ListPhotos)
-    .Where(wf => wf.TypeEstablishment == establishmentAux.TypeEstablishment && wf.City == establishmentAux.City)
-    .ToListAsync();
+                var establishments = _context.Establishment.Where(wf => wf.TypeEstablishment == establishmentAux.TypeEstablishment && wf.City == establishmentAux.City).ToList();
                 return Ok(establishments);
             }
             else
             {
                 //Significa que vamos buscar pelos 3 parametros
-                //var establishments = _context.Establishment.Where(wf => wf.Name.Contains(establishmentAux.Name) && wf.TypeEstablishment == establishmentAux.TypeEstablishment && wf.City == establishmentAux.City).ToList();
-                var establishments = await _context.Establishment
-    .Include(e => e.ListPhotos)
-    .Where(wf => wf.Name.Contains(establishmentAux.Name) && wf.TypeEstablishment == establishmentAux.TypeEstablishment && wf.City == establishmentAux.City)
-    .ToListAsync();
+                var establishments = _context.Establishment.Where(wf => wf.Name.Contains(establishmentAux.Name) && wf.TypeEstablishment == establishmentAux.TypeEstablishment && wf.City == establishmentAux.City).ToList();
                 return Ok(establishments);
             }
+        }
+
+        //Adicionar fotografia ao estabelecimento
+        [HttpPost("addphoto/{id}")]
+        public async Task<ActionResult> AddPhoto(int id, [FromForm] IFormFile foto)
+        {
+            //Verificar se o estabelecimento já não possui o máximo de fotografias associadas (5)
+            var establishment = await _context.Establishment
+                                  .Include(a => a.ListPhotos)
+                                  .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (establishment != null)
+            {
+                if (establishment.ListPhotos.Count > 4)
+                {
+                    return BadRequest("Um estabelecimento pode ter no máximo 5 fotografias");
+                }
+            }
+
+            //Avaliar a fotografia
+
+            //Será que o utilizador submeteu a fotografia
+            string nomeFoto = "";
+            //Caso sim vamos validar se é mesmo uma imagem
+            if (foto != null)
+            {
+                //Caso não for .jpg,.jpeg,.png enviar mensagem de erro
+                if (!(foto.ContentType == "image/jpeg" || foto.ContentType == "image/png" || foto.ContentType == "image/jpg"))
+                {
+                    ModelState.AddModelError("", "Por favor selecione uma imagem");
+                    return View();
+                }
+                //Caso for uma imagem
+                else
+                {
+                    // Definir nome da imagem
+                    Guid g;
+                    g = Guid.NewGuid();
+                    nomeFoto = g.ToString();
+                    string extensao = Path.GetExtension(foto.FileName).ToLower();
+                    nomeFoto += extensao;
+
+                    //Associar a imagem ao estabelecimento na base de dados
+                    Photo photo = new Photo
+                    {
+                        Date = DateTime.Now,
+                        Name = nomeFoto
+                    };
+
+                    //adicionar a lista 
+                    establishment.ListPhotos.Add(photo);
+                }
+            }
+            else
+            {
+                return BadRequest("Por favor selecione uma imagem");
+            }
+
+            try
+            {
+                _context.Update(establishment);
+                await _context.SaveChangesAsync();
+
+                //Guardar a imagem em disco 
+                if (foto != null)
+                {
+                    // ask the server what address it wants to use
+                    string enderecoParaGuardarAImagem = _webHostEnvironment.WebRootPath;
+                    string novaLocalizacao = Path.Combine(enderecoParaGuardarAImagem, "Photos//User");
+                    // see if the folder 'Photos' exists
+                    if (!Directory.Exists(novaLocalizacao))
+                    {
+                        Directory.CreateDirectory(novaLocalizacao);
+                    }
+                    // save image file to disk
+                    novaLocalizacao = Path.Combine(novaLocalizacao, nomeFoto);
+                    using var stream = new FileStream(novaLocalizacao, FileMode.Create);
+                    await foto.CopyToAsync(stream);
+                }
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!EstablishmentExists(establishment.Id))
+                {
+                    return BadRequest("Not Found");
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return Ok("");
+        }
+
+        //Eliminar as fotografias do estabelecimento
+        [HttpDelete("deletephoto/{id}")]
+        public async Task<ActionResult> DeletePhoto(int id, [FromForm] int idEstablishment)
+        {
+            //Verificar se o estabelecimento tem apenas uma foto
+            var establishment = await _context.Establishment
+                      .Include(a => a.ListPhotos)
+                      .FirstOrDefaultAsync(m => m.Id == idEstablishment);
+
+            if (establishment == null)
+            {
+                return BadRequest("ohi");
+            }
+            else
+            {
+                if (establishment.ListPhotos.Count <= 1)
+                {
+                    return BadRequest("O estabelecimento deve ter pelo menos uma imagem");
+                }
+            }
+
+            var photo = await _context.Photo.FindAsync(id);
+
+            if (photo != null)
+            {
+                _context.Photo.Remove(photo);
+            }
+
+
+            await _context.SaveChangesAsync();
+
+            //Eliminar a imagem em disco 
+            if (id != null)
+            {
+                // ask the server what address it wants to use
+                string enderecoParaGuardarAImagem = _webHostEnvironment.WebRootPath;
+                string novaLocalizacao = Path.Combine(enderecoParaGuardarAImagem, "Photos//User");
+                // see if the folder 'Photos' exists
+                if (!Directory.Exists(novaLocalizacao))
+                {
+                    Directory.CreateDirectory(novaLocalizacao);
+                }
+
+                novaLocalizacao = Path.Combine(novaLocalizacao, photo.Name);
+                System.IO.File.Delete(novaLocalizacao);
+            }
+
+            return Ok("Fotografia eliminada com sucesso");
+        }
+
+        //Buscar as fotos que pertencem ao estabelecimento
+        [HttpGet("Getphotos/{id}")]
+        public async Task<ActionResult> GetPhotos(int id)
+        {
+            var photos =  _context.Photo
+                        .Where(p => p.EstablishmentFK == id);
+
+            return Ok(photos);
         }
 
     }

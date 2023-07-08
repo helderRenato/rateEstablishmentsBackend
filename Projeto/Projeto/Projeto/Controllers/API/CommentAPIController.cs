@@ -11,55 +11,105 @@ namespace Projeto.Controllers.API
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RatingAPIController : Controller
+    public class CommentAPIController : Controller
     {
         private readonly ApplicationDBContext _context;
 
-        public RatingAPIController(ApplicationDBContext context)
+        public CommentAPIController(ApplicationDBContext context)
         {
             _context = context;
         }
 
-       [HttpPost("rating/{id}")]
-        public async Task<ActionResult> Create(int id, [FromBody] RatingTransportModel ratingAux)
+       [HttpPost("comment")]
+        public async Task<ActionResult> Create([FromBody] CommentTransportModel commentAux)
         {
-            //Criar o rating
-            var rating = new Rating();
+            //Criar o comentário
+            var comment = new Comment();
 
-            rating.Stars = ratingAux.Stars;
-            rating.UserFK = ratingAux.UserFK; 
-            rating.EstablishmentFK = id;
+            comment.Text = commentAux.Text;
+            comment.UserFK = commentAux.UserFK;
+            comment.EstablishmentFK = commentAux.EstablishmentFK;
+            
+            _context.Add(comment);
+            await _context.SaveChangesAsync();
+            
 
-            var rating2 = _context.Rating
-                    .Where(r => r.UserFK == rating.UserFK)
-                    .FirstOrDefault();
-
-            //Caso o utilizador possua algum rating podemos simplesmente atualizar
-            if (rating2 != null)
-            {
-                rating2.Stars = rating.Stars;
-                _context.Update(rating2);
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                _context.Add(rating);
-                await _context.SaveChangesAsync();
-            }
-
-            return Ok("Avaliação criada com sucesso");
+            return Ok("Comentário criado com sucesso");
         }
 
-        //Receber os Ratings feitos
-        [HttpGet("getRatings/{id}")]
-        public async Task<ActionResult> ReceberRatings(int id)
+        //Responder ao cometário
+        [HttpPost("answer/{id}")]
+        public async Task<ActionResult> Answer(int id, CommentTransportModel commentAux)
+        {
+            //Criar o comentário
+            var comment = _context.Comment
+                .Where(r => r.EstablishmentFK == id)
+                .FirstOrDefault();
+
+
+            comment.Response = commentAux.Response; 
+
+            _context.Update(comment);
+            await _context.SaveChangesAsync();
+
+
+            return Ok("Comentário criado com sucesso");
+        }
+
+        //Receber os Ratings feitos pelo id do estabelecimento
+        [HttpGet("getComments/{id}")]
+        public async Task<ActionResult> ReceberComments(int id)
         {
             //Buscar os ratings na base de dados
-            var ratings = _context.Rating
+            var comments = _context.Comment
                 .Where(r => r.EstablishmentFK == id); 
 
-            return Ok(ratings);
+            return Ok(comments);
         }
+
+        //Apagar a resposta pelo id do comentário
+        [HttpDelete("deleteAnswer/{id}")]
+        public async Task<ActionResult> DeleteAnswer(int id)
+        {
+            var comment = _context.Comment
+                .Where(r => r.Id == id)
+                .FirstOrDefault();
+
+            comment.Response = null;
+            _context.Update(comment);
+            await _context.SaveChangesAsync();
+
+            return Ok("Resposta eliminada com sucesso");
+        }
+
+        //Apagar o comentário pelo id do comentário
+        [HttpDelete("deleteComment/{id}")]
+        public async Task<ActionResult> DeleteComment(int id)
+        {
+            var comment = await _context.Comment.FindAsync(id);
+            _context.Comment.Remove(comment);
+            await _context.SaveChangesAsync();
+
+            return Ok("Comentário eliminado com sucesso");
+        }
+
+        //Denunciar o comentário 
+        [HttpPost("denunciar/{id}")]
+        public async Task<ActionResult> Denunciar(int id)
+        {
+            var comment = _context.Comment
+                .Where(r => r.EstablishmentFK == id)
+                .FirstOrDefault();
+
+            comment.Denounced = true;
+
+            _context.Update(comment);
+            await _context.SaveChangesAsync();
+
+
+            return Ok("Comentário denunciado com sucesso");
+        }
+
 
     }
 }

@@ -201,8 +201,8 @@ namespace Projeto.Controllers.API
         }
 
 
-        [HttpGet("get")]
-        public async Task<ActionResult> GetData(string name, string city, establishmentType type)
+        [HttpGet("getData")]
+        public async Task<ActionResult> GetData([FromQuery]int id)
         {
             //var establishmentName = _context.Establishment.FirstOrDefault(e => e.Name == name);
             //var establishmentAddress = _context.Establishment.FirstOrDefault(e => e.City == city);
@@ -210,7 +210,9 @@ namespace Projeto.Controllers.API
 
             var establishment = await _context.Establishment
                     .Include(e => e.ListPhotos)
-                    .FirstOrDefaultAsync(e => e.Name == name && e.City == city && e.TypeEstablishment == type);
+                    .Include(e => e.ListComments)
+                    //.Include(e => e.ListRatings)
+                    .FirstOrDefaultAsync(e => e.Id == id);
 
             return Ok(establishment);
 

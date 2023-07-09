@@ -205,7 +205,10 @@ namespace Projeto.Controllers.API
         public async Task<ActionResult> GetData(int id)
         {
             var establishment = await _context.Establishment
-                    .FirstOrDefaultAsync(e => e.Id == id);
+                                               .Include(a => a.ListPhotos)
+                                               .Include(a => a.ListComments)
+                                               .Include(a => a.ListRatings)
+                                               .FirstOrDefaultAsync(m => m.Id == id);
 
             return Ok(establishment);
 
@@ -434,6 +437,20 @@ namespace Projeto.Controllers.API
                         .Where(p => p.EstablishmentFK == id);
 
             return Ok(photos);
+        }
+
+        [HttpGet("getData")]
+        public async Task<ActionResult> GetData2([FromQuery] int id)
+        {
+
+            var establishment = await _context.Establishment
+                    .Include(e => e.ListPhotos)
+                    .Include(e => e.ListComments)
+                    .Include(e => e.ListRatings)
+                    .FirstOrDefaultAsync(e => e.Id == id);
+
+            return Ok(establishment);
+
         }
 
 

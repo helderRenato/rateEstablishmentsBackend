@@ -436,6 +436,20 @@ namespace Projeto.Controllers.API
             return Ok(photos);
         }
 
+        [HttpGet("getData")]
+        public async Task<ActionResult> GetData2([FromQuery] int id)
+        {
+
+            var establishment = await _context.Establishment
+                    .Include(e => e.ListPhotos)
+                    .Include(e => e.ListComments)
+                    .Include(e => e.ListRatings)
+                    .FirstOrDefaultAsync(e => e.Id == id);
+
+            return Ok(establishment);
+
+        }
+
 
 
 

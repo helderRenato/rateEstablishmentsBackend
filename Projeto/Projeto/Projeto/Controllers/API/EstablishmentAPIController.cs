@@ -205,7 +205,10 @@ namespace Projeto.Controllers.API
         public async Task<ActionResult> GetData(int id)
         {
             var establishment = await _context.Establishment
-                    .FirstOrDefaultAsync(e => e.Id == id);
+                                               .Include(a => a.ListPhotos)
+                                               .Include(a => a.ListComments)
+                                               .Include(a => a.ListRatings)
+                                               .FirstOrDefaultAsync(m => m.Id == id);
 
             return Ok(establishment);
 

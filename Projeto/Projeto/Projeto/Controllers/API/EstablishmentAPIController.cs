@@ -175,7 +175,7 @@ namespace Projeto.Controllers.API
 
         //Editar os dados pertencentes ao estabelecimento 
         [HttpPost("edit/{id}")]
-        public async Task<ActionResult> Edit(int id, [FromBody] EstablishmentTransportModel establishmentAux)
+        public async Task<ActionResult> Edit(int id, [FromForm] EstablishmentTransportModel establishmentAux)
         {
             //Buscar o estabelecimento existente 
             var existingEstablishment = _context.Establishment.FirstOrDefault(wf => wf.Id == id);
@@ -201,17 +201,10 @@ namespace Projeto.Controllers.API
         }
 
 
-        [HttpGet("getData")]
-        public async Task<ActionResult> GetData([FromQuery]int id)
+        [HttpGet("get/{id}")]
+        public async Task<ActionResult> GetData(int id)
         {
-            //var establishmentName = _context.Establishment.FirstOrDefault(e => e.Name == name);
-            //var establishmentAddress = _context.Establishment.FirstOrDefault(e => e.City == city);
-
-
             var establishment = await _context.Establishment
-                    .Include(e => e.ListPhotos)
-                    .Include(e => e.ListComments)
-                    .Include(e => e.ListRatings)
                     .FirstOrDefaultAsync(e => e.Id == id);
 
             return Ok(establishment);
@@ -285,7 +278,7 @@ namespace Projeto.Controllers.API
                 var establishments = await _context.Establishment
     .Include(e => e.ListPhotos)
     .Where(wf => wf.Name.Contains(establishmentAux.Name) && wf.TypeEstablishment == establishmentAux.TypeEstablishment && wf.City == establishmentAux.City)
-    .ToListAsync(); 
+    .ToListAsync();
                 return Ok(establishments);
             }
         }
@@ -437,11 +430,28 @@ namespace Projeto.Controllers.API
         [HttpGet("Getphotos/{id}")]
         public async Task<ActionResult> GetPhotos(int id)
         {
-            var photos =  _context.Photo
+            var photos = _context.Photo
                         .Where(p => p.EstablishmentFK == id);
 
             return Ok(photos);
         }
+
+        [HttpGet("getData")]
+        public async Task<ActionResult> GetData2([FromQuery] int id)
+        {
+
+            var establishment = await _context.Establishment
+                    .Include(e => e.ListPhotos)
+                    .Include(e => e.ListComments)
+                    .Include(e => e.ListRatings)
+                    .FirstOrDefaultAsync(e => e.Id == id);
+
+            return Ok(establishment);
+
+        }
+
+
+
 
     }
 }

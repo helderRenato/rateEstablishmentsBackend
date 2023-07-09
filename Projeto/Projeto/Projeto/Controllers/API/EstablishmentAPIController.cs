@@ -175,7 +175,7 @@ namespace Projeto.Controllers.API
 
         //Editar os dados pertencentes ao estabelecimento 
         [HttpPost("edit/{id}")]
-        public async Task<ActionResult> Edit(int id, [FromBody] EstablishmentTransportModel establishmentAux)
+        public async Task<ActionResult> Edit(int id, [FromForm] EstablishmentTransportModel establishmentAux)
         {
             //Buscar o estabelecimento existente 
             var existingEstablishment = _context.Establishment.FirstOrDefault(wf => wf.Id == id);
@@ -201,64 +201,84 @@ namespace Projeto.Controllers.API
         }
 
 
-        [HttpGet("get")]
-        public async Task<ActionResult> GetData(string name, string city, establishmentType type)
+        [HttpGet("get/{id}")]
+        public async Task<ActionResult> GetData(int id)
         {
-            //var establishmentName = _context.Establishment.FirstOrDefault(e => e.Name == name);
-            //var establishmentAddress = _context.Establishment.FirstOrDefault(e => e.City == city);
+            var establishment = await _context.Establishment
+                    .FirstOrDefaultAsync(e => e.Id == id);
 
+            return Ok(establishment);
 
-
-            return Ok(_context.Establishment.FirstOrDefault(e => e.Name == name && e.City == city && e.TypeEstablishment == type));
         }
 
 
 
         //Filtrar os estabelecimentos pelo Nome e o/u o tipo de estabelecimento (Restaurante, Café, Bar, Hotel) e Cidade
         [HttpGet("getFiltered")]
-        public async Task<ActionResult> GetFiltered([FromBody] FilterEstablishmentModel establishmentAux)
+        public async Task<ActionResult> GetFiltered([FromQuery] FilterEstablishmentModel establishmentAux)
         {
             //Verificar se a request veio apenas com o nome ou o tipo de estabelecimento , cidade ou os tres juntos 
             if ((establishmentAux.Name == null) && (establishmentAux.TypeEstablishment != null) && (establishmentAux.City == null))
             {
                 //Significa que vamos buscar os estabelicementos apenas pelo tipo
-                var establishments = _context.Establishment.Where(wf => wf.TypeEstablishment == establishmentAux.TypeEstablishment).ToList();
+                var establishments = await _context.Establishment
+    .Include(e => e.ListPhotos)
+    .Where(wf => wf.TypeEstablishment == establishmentAux.TypeEstablishment)
+    .ToListAsync();
                 return Ok(establishments);
             }
             else if ((establishmentAux.Name != null) && (establishmentAux.TypeEstablishment == null) && (establishmentAux.City == null))
             {
                 //Significa que vamos buscar apenas pelo nome
-                var establishments = _context.Establishment.Where(wf => wf.Name.Contains(establishmentAux.Name)).ToList();
+                var establishments = await _context.Establishment
+    .Include(e => e.ListPhotos)
+    .Where(wf => wf.Name.Contains(establishmentAux.Name))
+    .ToListAsync();
                 return Ok(establishments);
             }
             else if ((establishmentAux.Name == null) && (establishmentAux.TypeEstablishment == null) && (establishmentAux.City != null))
             {
                 //Significa que vamos buscar apenas pela cidade 
-                var establishments = _context.Establishment.Where(wf => wf.City == establishmentAux.City).ToList();
+                var establishments = await _context.Establishment
+    .Include(e => e.ListPhotos)
+    .Where((wf => wf.City == establishmentAux.City))
+    .ToListAsync();
                 return Ok(establishments);
             }
             else if ((establishmentAux.Name != null) && (establishmentAux.TypeEstablishment == null) && (establishmentAux.City != null))
             {
                 //Significa que vamos buscar pela cidade e o nome
-                var establishments = _context.Establishment.Where(wf => wf.City == establishmentAux.City && wf.Name.Contains(establishmentAux.Name)).ToList();
+                var establishments = await _context.Establishment
+    .Include(e => e.ListPhotos)
+    .Where(wf => wf.City == establishmentAux.City && wf.Name.Contains(establishmentAux.Name))
+    .ToListAsync();
                 return Ok(establishments);
             }
             else if ((establishmentAux.Name != null) && (establishmentAux.TypeEstablishment != null) && (establishmentAux.City == null))
             {
                 //Pelo nome e o tipo 
-                var establishments = _context.Establishment.Where(wf => wf.TypeEstablishment == establishmentAux.TypeEstablishment && wf.Name.Contains(establishmentAux.Name)).ToList();
+                var establishments = await _context.Establishment
+   .Include(e => e.ListPhotos)
+   .Where(wf => wf.TypeEstablishment == establishmentAux.TypeEstablishment && wf.Name.Contains(establishmentAux.Name))
+   .ToListAsync();
                 return Ok(establishments);
             }
             else if ((establishmentAux.Name == null) && (establishmentAux.TypeEstablishment != null) && (establishmentAux.City != null))
             {
                 //Pela cidade e pelo tipo
-                var establishments = _context.Establishment.Where(wf => wf.TypeEstablishment == establishmentAux.TypeEstablishment && wf.City == establishmentAux.City).ToList();
+                var establishments = await _context.Establishment
+    .Include(e => e.ListPhotos)
+    .Where(wf => wf.TypeEstablishment == establishmentAux.TypeEstablishment && wf.City == establishmentAux.City)
+    .ToListAsync();
                 return Ok(establishments);
             }
             else
             {
                 //Significa que vamos buscar pelos 3 parametros
-                var establishments = _context.Establishment.Where(wf => wf.Name.Contains(establishmentAux.Name) && wf.TypeEstablishment == establishmentAux.TypeEstablishment && wf.City == establishmentAux.City).ToList();
+                var establishments = await _context.Establishment
+    .Include(e => e.ListPhotos)
+    .Where(wf => wf.Name.Contains(establishmentAux.Name) && wf.TypeEstablishment == establishmentAux.TypeEstablishment && wf.City == establishmentAux.City)
+    .ToListAsync();
                 return Ok(establishments);
             }
         }
@@ -410,11 +430,14 @@ namespace Projeto.Controllers.API
         [HttpGet("Getphotos/{id}")]
         public async Task<ActionResult> GetPhotos(int id)
         {
-            var photos =  _context.Photo
+            var photos = _context.Photo
                         .Where(p => p.EstablishmentFK == id);
 
             return Ok(photos);
         }
+
+
+
 
     }
 }

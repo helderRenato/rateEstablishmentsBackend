@@ -31,7 +31,7 @@ namespace Projeto.Controllers.API
             rating.EstablishmentFK = id;
 
             var rating2 = _context.Rating
-                    .Where(r => r.UserFK == rating.UserFK)
+                    .Where(r => r.UserFK == rating.UserFK && r.EstablishmentFK == rating.EstablishmentFK)
                     .FirstOrDefault();
 
             //Caso o utilizador possua algum rating podemos simplesmente atualizar

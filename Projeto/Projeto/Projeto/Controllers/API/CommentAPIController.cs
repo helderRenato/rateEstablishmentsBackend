@@ -98,7 +98,7 @@ namespace Projeto.Controllers.API
         public async Task<ActionResult> Denunciar(int id)
         {
             var comment = _context.Comment
-                .Where(r => r.EstablishmentFK == id)
+                .Where(r => r.Id == id)
                 .FirstOrDefault();
 
             comment.Denounced = true;

@@ -122,17 +122,17 @@ namespace Projeto.Controllers.API
         }
 
         //Caso o utilizador esqueca-se da password devemos ter uma rota capaz de fazer o reset a password 
-        [HttpPost("resetpass/{id}")]
-        public async Task<ActionResult> ResetPass(int id, [FromBody] PasswordResetModel passwordReset)
+        [HttpPost("resetpass")]
+        public async Task<ActionResult> ResetPass([FromBody] PasswordResetModel passwordReset)
         {
             if (ModelState.IsValid)
             {
                 //Buscar o utilizador pelo Id 
                 var establishment = _context.Establishment
-                            .FirstOrDefault(a => a.Id == id);
+                            .FirstOrDefault(a => a.Email == passwordReset.Email);
                 if (establishment == null)
                 {
-                    return BadRequest("Estabelecimento Inexistente");
+                    return BadRequest("Estabelecimento Inexistente por favor insira um novo email");
                 }
 
                 //Verificar se a password e o confirmar password são iguais
@@ -438,22 +438,6 @@ namespace Projeto.Controllers.API
 
             return Ok(photos);
         }
-
-        [HttpGet("getData")]
-        public async Task<ActionResult> GetData2([FromQuery] int id)
-        {
-
-            var establishment = await _context.Establishment
-                    .Include(e => e.ListPhotos)
-                    .Include(e => e.ListComments)
-                    .Include(e => e.ListRatings)
-                    .FirstOrDefaultAsync(e => e.Id == id);
-
-            return Ok(establishment);
-
-        }
-
-
 
 
     }

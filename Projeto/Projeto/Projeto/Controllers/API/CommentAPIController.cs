@@ -43,7 +43,7 @@ namespace Projeto.Controllers.API
         {
             //Criar o comentário
             var comment = _context.Comment
-                .Where(r => r.EstablishmentFK == id)
+                .Where(r => r.Id == id)
                 .FirstOrDefault();
 
 

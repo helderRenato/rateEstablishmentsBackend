@@ -5,6 +5,7 @@ namespace Projeto.Models
 {
     public class PasswordResetModel
     {
+        public string Email { get; set; }
         /// <summary>
         /// Password do Estabelecimento 
         /// </summary>

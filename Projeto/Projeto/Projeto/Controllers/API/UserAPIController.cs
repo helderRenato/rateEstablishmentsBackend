@@ -91,16 +91,16 @@ namespace Projeto.Controllers.API
         }
 
         //Caso o utilizador esqueca-se da password devemos ter uma rota capaz de fazer o reset a password 
-        [HttpPost("resetpass/{id}")]
-        public async Task<ActionResult> ResetPass(int id, [FromBody] PasswordResetModel passwordReset)
+        [HttpPost("resetpass")]
+        public async Task<ActionResult> ResetPass([FromBody] PasswordResetModel passwordReset)
         {
             //Buscar o utilizador pelo Id 
             var user = _context.Users
-                        .FirstOrDefault(a => a.Id == id);
+                        .FirstOrDefault(a => a.Email == passwordReset.Email);
 
             if(user == null)
             {
-                return BadRequest("Utilizador Inexistente");
+                return BadRequest("Utilizador Inexistente por favor insira um novo email.");
             }
             //Verificar se a password e o confirmar password são iguais
             if (passwordReset.Password != passwordReset.ConfirmarPassword)
@@ -130,6 +130,16 @@ namespace Projeto.Controllers.API
                 }
             }
             return Ok(user);
+        }
+
+        [HttpGet("get/{id}")]
+        public async Task<ActionResult> GetData(int id)
+        {
+            var user = await _context.Users
+                                     .FirstOrDefaultAsync(m => m.Id == id);
+
+            return Ok(user);
+
         }
 
         private bool UserExists(int id)

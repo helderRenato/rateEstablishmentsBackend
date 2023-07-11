@@ -37,7 +37,7 @@ namespace Projeto.Controllers
             ViewData["Establishments"] = new SelectList(_context.Establishment, "Id", "Name");
 
             var rating = _context.Rating
-                .Where(r => r.UserFK == establishmentRate.UserFK && r.EstablishmentFK == rating.EstablishmentFK)
+                .Where(r => r.UserFK == establishmentRate.UserFK && r.EstablishmentFK == establishmentRate.EstablishmentFK)
                 .FirstOrDefault(); 
                 
             if (ModelState.IsValid)
